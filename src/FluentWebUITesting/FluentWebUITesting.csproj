@@ -53,7 +53,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="WatiN.Core, Version=2.0.20.0, Culture=neutral, PublicKeyToken=db7cfd3acb5ad44e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\WatiN\Bin\WatiN.Core.dll</HintPath>
+      <HintPath>..\..\lib\WatiN\WatiN.Core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
