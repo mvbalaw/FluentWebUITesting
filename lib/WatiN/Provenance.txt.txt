@@ -1,0 +1,4 @@
+NUnit-2.5.3.9345
+http://watin.sourceforge.net/
+Downloaded from the watin site on 1/28/2010:
+http://sourceforge.net/projects/watin/files/WatiN%202.x/2.0%20Release%20candidates/WatiN-2.0.20.1089-net-2.0.zip/download

@@ -1,0 +1,165 @@
+<!-- saved from url=(0029)http://watin.sourceforge.net/ -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="X-UA-Compatible" content="IE=8" />
+		<script language="javascript">
+
+function reportId(element) {
+    report = document.getElementById("Report");
+    report.value = "button.id = " + element.id;
+
+    buttonValue = document.getElementById("eventButtonValue");
+    buttonValue.value = window.event.button;
+    
+    scrElement = document.getElementById("eventScrElement");
+    scrElement.value = window.event.srcElement.value;
+    
+    return true
+}
+
+function ShowConfirmDialog() {
+     var answer = confirm('Do you want to do xyz?');
+     report = document.getElementById("ReportConfirmResult")
+     if (answer == true)
+         report.value = "OK"
+     else
+         report.value = "Cancel";
+}
+
+function ShowAlertDialog() {
+     alert('This is an alert!');
+}
+
+function keyDown() {
+    checkbox = document.getElementById("chkKeyDown");
+    checkbox.checked = true;
+    return true
+}
+function keyPress(e) {
+    checkbox = document.getElementById("chkKeyPress");
+    checkbox.checked = true;
+
+    keycodes = document.getElementById("txtKeycodeId");
+    if (!e) e = window.event;
+    var keycode = e.charCode || e.keyCode;
+    charfromkeycode = String.fromCharCode(keycode); 
+    keycodes.value = keycodes.value + charfromkeycode;
+    
+    return true
+}
+function keyUp() {
+    checkbox = document.getElementById("chkKeyUp");
+    checkbox.checked = true;
+    return true
+}
+ 
+function fnOpen()
+{
+   window.showModalDialog("TestEvents.html", "", "") 
+} 
+
+function injectElement()
+{
+    window.setTimeout(function() 
+    {
+      div = document.getElementById("injectElementDiv"); 
+      div.innerHTML = "<div id='seconddiv'><input type=text id=injectedTextField value='Injection Succeeded' /></div>";
+    }, 3000);
+}
+
+function removeElement1()
+{
+    window.setTimeout(function() 
+    {
+      div = document.getElementById("textFieldToRemoveDiv"); 
+      div.innerHTML = "";
+    }, 3000);
+}
+
+function removeElement()
+{
+    window.setTimeout(function() 
+    {
+      div = document.getElementById("textFieldToRemoveDiv"); 
+      div.parentNode.removeChild(div);
+    }, 3000);
+}
+
+function ClickHref()
+{
+    text = document.getElementById("hrefclickresult");
+    text.value = "success";
+}
+
+function fnPrompt()
+{
+    document.getElementById("promptResult").value = prompt("input");
+}
+
+		</script>
+	</head>
+	<body>
+		<p>
+			<input type="button" value="Button without id" onkeydown="return reportId(this)" onclick="return reportId(this)" />
+			<input id="Report" type="text" name="Report" style="WIDTH: 280px; HEIGHT: 22px" size="41" />&nbsp;
+			<input type="button" id="ButtonWithId" onkeydown="return reportId(this)" onclick="return reportId(this)" />
+			<label>Event.button value 
+			    <input id="eventButtonValue" type="text" style="WIDTH: 40px; HEIGHT: 22px" size="1" />
+			</label>
+			<label>Event.scrElement.uniqueid value 
+			    <input id="eventScrElement" type="text" style="WIDTH: 40px; HEIGHT: 22px" size="1" />
+			</label>
+		</p>
+		<p>
+			<input id="confirmdialogid" onclick="javascript:ShowConfirmDialog()" type="button" value="Show confirm dialog" />
+			<input id="ReportConfirmResult" type="text" style="WIDTH: 432px; HEIGHT: 22px" size="66" />
+		</p>
+		<p>
+			<input id="alertdialogid" onclick="javascript:ShowAlertDialog()" type="button" value="Show alert dialog" />
+		</P>
+		<p>
+		    <input id="showPrompt" onclick="fnPrompt()" type="button" value="Show prompt" />
+		    <input id="promptResult" type="text" />
+		</p>
+		<p>
+			<input type="button" name="cmdClickMe" value="VBScript MsgBox" ID="vbScriptMsgBox" />
+			<script type="text/vbscript" for="cmdClickMe" event="onClick" language="VBScript">
+			msgBoxReturnValue.value = MsgBox("WatiN VbScriptMsgBoxDialogHandler test.",msgBoxButtons.value)
+			</script>
+			<input type="text" id="msgBoxButtons" value="0" />
+			<input type="text" id="msgBoxReturnValue" value="" />
+		</p>
+		<p>
+			<input id="textfieldid" type="text" onkeydown="javascript:keyDown()" onkeypress="javascript:keyPress(event)" onkeyup="javascript:keyUp()" /> 
+			<label><input type="checkbox" id="chkKeyDown" /> KeyDown</label>
+			<label><input type="checkbox" id="chkKeyPress" /> KeyPress</label> 
+			<label><input type="checkbox" id="chkKeyUp" /> KeyUp</label> 
+			<input id="txtKeycodeId" type="text" />
+		</p>
+		<p>
+			<input id="modalid" onclick="fnOpen()" type="button" value="Show this page in modal dialog"	name="popupmodalname" />
+		</p>
+		<p>
+		    <input id="injectElement" onclick="injectElement()" type="button" value="Inject element after 3 seconds" />
+		</p>
+		<p>&nbsp;</p>
+		    <div id="injectElementDiv">Inject Element here to test Element.WaitUntilExists</div>
+		<p>
+		    <input id="removeElement" onclick="removeElement()" type="button" value="Remove element after 3 seconds" />
+		</p>
+		<p>&nbsp;</p>
+		<div id="textFieldToRemoveDiv">
+		    <input type="text" id="textFieldToRemove" value='Element to be removed' />
+		</div>
+		<a href="javascript:ClickHref()" id="hreftest">Link with javascript in Href</a>
+		<input id="hrefclickresult" type="text" />
+		<p>
+            <select id="selectList" size="2" onchange="javascript:confirm('Selected an item')">
+                <option value="1">First Listitem</option>
+                <option value="2">Second Listitem</option>
+            </select>
+		</p>
+	</body>
+</html>

@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentWebUITesting", "FluentWebUITesting\FluentWebUITesting.csproj", "{EDFFC55B-01CA-42BB-8B2C-B2C172CF5E6B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EDFFC55B-01CA-42BB-8B2C-B2C172CF5E6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDFFC55B-01CA-42BB-8B2C-B2C172CF5E6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDFFC55B-01CA-42BB-8B2C-B2C172CF5E6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDFFC55B-01CA-42BB-8B2C-B2C172CF5E6B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
