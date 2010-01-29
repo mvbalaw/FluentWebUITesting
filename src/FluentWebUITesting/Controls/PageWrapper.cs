@@ -4,7 +4,7 @@ using WatiN.Core;
 
 namespace FluentWebUITesting.Controls
 {
-    public class PageWrapper
+	public class PageWrapper
     {
         private readonly Browser _browser;
 

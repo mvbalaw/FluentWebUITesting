@@ -1,3 +1,5 @@
+using FluentWebUITesting.Accessors;
+
 using WatiN.Core;
 
 namespace FluentWebUITesting.Controls
@@ -16,5 +18,15 @@ namespace FluentWebUITesting.Controls
         {
             get { return _option; }
         }
+
+		public ReadOnlyText Text()
+		{
+			return new ReadOnlyText("text of "+HowFound, _option.Text);	
+		}
+
+		public ReadOnlyText Value()
+		{
+			return new ReadOnlyText("value of "+ HowFound, _option.Value);	
+		}
     }
 }

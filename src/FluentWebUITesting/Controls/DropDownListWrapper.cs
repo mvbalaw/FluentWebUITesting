@@ -6,31 +6,45 @@ using WatiN.Core;
 
 namespace FluentWebUITesting.Controls
 {
-    public class DropDownListWrapper : ControlWrapperBase
-    {
-        private readonly Browser _browser;
-        private readonly SelectList _dropDownList;
+	public class DropDownListWrapper : ControlWrapperBase
+	{
+		private readonly Browser _browser;
+		private readonly SelectList _dropDownList;
 
-        public DropDownListWrapper(SelectList dropDownList, Browser browser, string howFound)
-            : base(howFound)
-        {
-            _dropDownList = dropDownList;
-            _browser = browser;
-        }
+		public DropDownListWrapper(SelectList dropDownList, Browser browser, string howFound)
+			: base(howFound)
+		{
+			_dropDownList = dropDownList;
+			_browser = browser;
+		}
 
-        protected override Element Element
-        {
-            get { return _dropDownList; }
-        }
+		protected override Element Element
+		{
+			get { return _dropDownList; }
+		}
 
-        public void Select([NotNull] string text)
-        {
-            Exists().ShouldBeTrue();
-            Enabled().ShouldBeTrue();
-            _dropDownList.OptionWithText(text).Exists().ShouldBeTrue();
-            _dropDownList.Select(text);
+		public void SelectOptionWithText([NotNull] string text)
+		{
+			Verify();
+			var option = _dropDownList.OptionWithText(text);
+			option.Exists().ShouldBeTrue();
+			_dropDownList.Select(option.Text().GetValue());
+			_browser.WaitForComplete();
+		}
 
-            _browser.WaitForComplete();
-        }
-    }
+		public void SelectOptionWithValue([NotNull] string text)
+		{
+			Verify();
+			var option = _dropDownList.OptionWithValue(text);
+			option.Exists().ShouldBeTrue();
+			_dropDownList.Select(option.Text().GetValue());
+			_browser.WaitForComplete();
+		}
+
+		private void Verify()
+		{
+			Exists().ShouldBeTrue();
+			Enabled().ShouldBeTrue();
+		}
+	}
 }

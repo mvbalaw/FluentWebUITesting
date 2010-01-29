@@ -69,6 +69,9 @@
     <Compile Include="Controls\OptionWrapper.cs" />
     <Compile Include="Controls\PageWrapper.cs" />
     <Compile Include="Controls\RadioButtonOptionWrapper.cs" />
+    <Compile Include="Controls\TableCellWrapper.cs" />
+    <Compile Include="Controls\TableRowWrapper.cs" />
+    <Compile Include="Controls\TableWrapper.cs" />
     <Compile Include="Controls\TextBoxWrapper.cs" />
     <Compile Include="Extensions\BrowserExtensions.cs" />
     <Compile Include="Extensions\ControlWrapperExtensions.cs" />
