@@ -6,22 +6,22 @@ namespace FluentWebUITesting.Controls
 {
     public class LabelWrapper : ControlWrapperBase
     {
-        private readonly Span _span;
+        private readonly Label _label;
 
-        public LabelWrapper(Span span, string howFound)
+        public LabelWrapper(Label label, string howFound)
             : base(howFound)
         {
-            _span = span;
+            _label = label;
         }
 
         protected override Element Element
         {
-            get { return _span; }
+            get { return _label; }
         }
 
         public ReadOnlyText Text()
         {
-            return new ReadOnlyText(HowFound, _span.Text);
+            return new ReadOnlyText(HowFound, _label.Text);
         }
     }
 }

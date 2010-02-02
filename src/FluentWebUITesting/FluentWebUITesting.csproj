@@ -61,6 +61,7 @@
     <Compile Include="Accessors\ReadOnlyText.cs" />
     <Compile Include="Accessors\Result.cs" />
     <Compile Include="Accessors\TextBase.cs" />
+    <Compile Include="BrowserSetUp.cs" />
     <Compile Include="Controls\ButtonWrapper.cs" />
     <Compile Include="Controls\ControlWrapperBase.cs" />
     <Compile Include="Controls\DropDownListWrapper.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Controls\OptionWrapper.cs" />
     <Compile Include="Controls\PageWrapper.cs" />
     <Compile Include="Controls\RadioButtonOptionWrapper.cs" />
+    <Compile Include="Controls\SpanWrapper.cs" />
     <Compile Include="Controls\TableCellWrapper.cs" />
     <Compile Include="Controls\TableRowWrapper.cs" />
     <Compile Include="Controls\TableWrapper.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="Extensions\ControlWrapperExtensions.cs" />
     <Compile Include="Extensions\ISelectListExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestRunner.cs" />
     <Compile Include="UITestRunner.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

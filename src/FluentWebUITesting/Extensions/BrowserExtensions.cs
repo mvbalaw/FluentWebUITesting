@@ -27,7 +27,7 @@ namespace FluentWebUITesting.Extensions
 		public static LabelWrapper LabelWithId(this Browser browser, [NotNull] string id)
 		{
 			const string labelWithID = "label with id '{0}'";
-			return new LabelWrapper(browser.Span(Find.ById(id)), String.Format(labelWithID, id));
+			return new LabelWrapper(browser.Label(Find.ById(id)), String.Format(labelWithID, id));
 		}
 
 		public static LinkWrapper LinkWithId(this Browser browser, [NotNull] string id)
@@ -46,6 +46,12 @@ namespace FluentWebUITesting.Extensions
 		{
 			const string radioButtonOptionWithID = "radio button option with id '{0}'";
 			return new RadioButtonOptionWrapper(browser.RadioButton(Find.ById(idOfOption)), browser, String.Format(radioButtonOptionWithID, idOfOption));
+		}
+
+		public static SpanWrapper SpanWithId(this Browser browser, [NotNull] string id)
+		{
+			const string spanWithID = "span with id '{0}'";
+			return new SpanWrapper(browser.Span(Find.ById(id)), String.Format(spanWithID, id));
 		}
 
 		public static TableWrapper TableWithId(this Browser browser, [NotNull] string id)
