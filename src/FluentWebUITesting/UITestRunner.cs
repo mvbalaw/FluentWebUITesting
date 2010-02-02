@@ -12,6 +12,9 @@ namespace FluentWebUITesting
 {
     public class UITestRunner
     {
+        public static bool UseFirefox = false;
+        public static bool UseIE = true;
+
         public static IEnumerable<Action<Browser>> InitializeWorkFlowContainer(params Action<Browser>[] steps)
         {
             return steps;
@@ -51,6 +54,21 @@ namespace FluentWebUITesting
 
             public string FailureReason { get; private set; }
 
+            private IEnumerable<Browser> GetBrowsers()
+            {
+                if (UseFirefox)
+                {
+                    yield return new FireFox();
+                }
+                if (UseIE)
+                {
+                    yield return new IE
+                        {
+                            AutoClose = true
+                        };
+                }
+            }
+
             public bool PassesTest()
             {
                 _monitor.Reset();
@@ -66,35 +84,35 @@ namespace FluentWebUITesting
 
             private void RunTest()
             {
-                Browser browser = null;
-                try
+                foreach (var browser in GetBrowsers())
                 {
-                    //todo figure out IE Settings in new WatiN
-                    //					IE.Settings.AutoMoveMousePointerToTopLeft = false;
-                    //					IE.Settings.WaitForCompleteTimeOut = 120;
-                    browser = new IE
+                    try
+                    {
+                        //todo figure out IE Settings in new WatiN
+                        //					IE.Settings.AutoMoveMousePointerToTopLeft = false;
+                        //					IE.Settings.WaitForCompleteTimeOut = 120;
+
+                        foreach (var step in _steps)
                         {
-                            AutoClose = true
-                        };
-                    foreach (var step in _steps)
+                            step(browser);
+                        }
+                    }
+                    catch (Exception exception)
                     {
-                        step(browser);
+                        _failed = true;
+                        FailureReason = exception.Message;
+                        _monitor.Set();
+                        return;
+                    }
+                    finally
+                    {
+                        if (browser != null)
+                        {
+                            browser.Dispose();
+                        }
                     }
                 }
-                catch (Exception exception)
-                {
-                    _failed = true;
-                    FailureReason = exception.Message;
-                    return;
-                }
-                finally
-                {
-                    if (browser != null)
-                    {
-                        browser.Dispose();
-                    }
-                    _monitor.Set();
-                }
+                _monitor.Set();
             }
         }
     }
