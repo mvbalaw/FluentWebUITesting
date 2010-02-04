@@ -72,6 +72,7 @@ namespace FluentWebUITesting
 					if (browser != null)
 					{
 						browser.Close();
+						browser.Dispose();
 					}
 				}
 			}

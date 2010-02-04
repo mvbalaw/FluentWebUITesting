@@ -27,9 +27,9 @@ namespace FluentWebUITesting.Controls
 
 			if (tableBody != null)
 			{
-				return tableBody.OwnTableRows;
+				return tableBody.TableRows;
 			}
-			return _table.OwnTableRows
+			return _table.TableRows
 				.Except(GetHeaderRows().Concat(GetFooterRows()));
 		}
 
