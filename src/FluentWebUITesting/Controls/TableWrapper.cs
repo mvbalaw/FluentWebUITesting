@@ -23,9 +23,14 @@ namespace FluentWebUITesting.Controls
 
 		private IEnumerable<TableRow> GetBodyRows()
 		{
-			var bodyRows = _table.TableRows
+			var tableBody = _table.TableBodies.FirstOrDefault();
+
+			if (tableBody != null)
+			{
+				return tableBody.OwnTableRows;
+			}
+			return _table.OwnTableRows
 				.Except(GetHeaderRows().Concat(GetFooterRows()));
-			return bodyRows;
 		}
 
 		private IEnumerable<TableRow> GetFooterRows()
@@ -40,7 +45,6 @@ namespace FluentWebUITesting.Controls
 			var rows = _table.OwnTableRows;
 			var theadHeaderRows = rows.Filter(Find.ByElement(element => String.Compare(element.Parent.TagName, "thead", true) == 0));
 			var inlineHeaderRows = rows.Filter(Find.ByElement(e => e.NativeElement.Children.GetElementsByTag("th").Any()));
-
 			return theadHeaderRows.Union(inlineHeaderRows);
 		}
 
@@ -57,6 +61,7 @@ namespace FluentWebUITesting.Controls
 			var rows = GetBodyRows()
 				.Select((x, i) =>
 				        new TableRowWrapper(x, String.Format("{0}, row with index {1}", HowFound, i)));
+
 			return rows;
 		}
 	}
