@@ -44,7 +44,9 @@ namespace FluentWebUITesting.Accessors
 
 		public void ShouldBeEqualTo([NotNull] string text, string errorMessage)
 		{
-			Text.ShouldBeEqualTo(text, errorMessage);
+			string expected = text ?? "";
+			string actual = Text ?? "";
+			actual.ShouldBeEqualTo(expected, errorMessage);
 		}
 
 		public void ShouldNotBeEqualTo([NotNull] string text)
@@ -55,7 +57,9 @@ namespace FluentWebUITesting.Accessors
 
 		public void ShouldNotBeEqualTo([NotNull] string text, string errorMessage)
 		{
-			Text.ShouldNotBeEqualTo(text, errorMessage);
+			string expected = text ?? "";
+			string actual = Text ?? "";
+			actual.ShouldNotBeEqualTo(expected, errorMessage);
 		}
 
 		public Result StartsWith([NotNull] string startingText)

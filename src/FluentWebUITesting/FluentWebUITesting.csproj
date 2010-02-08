@@ -61,6 +61,7 @@
     <Compile Include="Accessors\ReadOnlyText.cs" />
     <Compile Include="Accessors\Result.cs" />
     <Compile Include="Accessors\TextBase.cs" />
+    <Compile Include="BrowserProvider.cs" />
     <Compile Include="BrowserSetUp.cs" />
     <Compile Include="Controls\ButtonWrapper.cs" />
     <Compile Include="Controls\ControlWrapperBase.cs" />

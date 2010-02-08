@@ -11,12 +11,23 @@ namespace FluentWebUITesting
 {
 	public class UITestRunner
 	{
-		private static BrowserSetUp _browserSetUp;
+		private static TestRunner _runner;
 
-		public static void Initialize(Action<BrowserSetUp> action)
+		public static void CloseBrowsers()
 		{
-			_browserSetUp = new BrowserSetUp();
-			action(_browserSetUp);
+			_runner.CloseBrowsers();
+		}
+
+		public static void InitializeBrowsers(Action<BrowserSetUp> action)
+		{
+			var browserSetUp = new BrowserSetUp();
+			action(browserSetUp);
+			if (String.IsNullOrEmpty(browserSetUp.BaseUrl))
+			{
+				throw new ArgumentException("Base Url cannot be empty");
+			}
+			_runner = new TestRunner(new BrowserProvider(browserSetUp), browserSetUp.WaitAfterEachStepInMilliSeconds);
+			_runner.Initialize();
 		}
 
 		public static IEnumerable<Action<Browser>> InitializeWorkFlowContainer(params Action<Browser>[] steps)
@@ -40,9 +51,8 @@ namespace FluentWebUITesting
 			{
 				steps.AddRange(testSteps);
 			}
-			var runner = new TestRunner(_browserSetUp, steps);
 
-			runner.PassesTest().ShouldBeTrue(runner.FailureReason);
+			_runner.PassesTest(steps).ShouldBeTrue(_runner.FailureReason);
 		}
 	}
 }

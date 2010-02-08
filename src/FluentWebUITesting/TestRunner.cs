@@ -8,56 +8,76 @@ namespace FluentWebUITesting
 {
 	internal class TestRunner
 	{
-		private readonly BrowserSetUp _browserSetUp;
+		private readonly BrowserProvider _browserProvider;
 		private readonly ManualResetEvent _monitor = new ManualResetEvent(false);
-		private readonly IEnumerable<Action<Browser>> _steps;
+		private readonly int _waitAfterEachStepInMilliSeconds;
 		private bool _failed;
 
-		public TestRunner(BrowserSetUp browserSetUp, IEnumerable<Action<Browser>> testSteps)
+		public TestRunner(BrowserProvider browserProvider, int waitAfterEachStepInMilliSeconds)
 		{
-			_browserSetUp = browserSetUp;
-			_steps = testSteps;
+			_browserProvider = browserProvider;
+			_waitAfterEachStepInMilliSeconds = waitAfterEachStepInMilliSeconds;
 		}
 
 		public string FailureReason { get; private set; }
 
-		private IEnumerable<Browser> GetBrowsers()
+		public void CloseBrowsers()
 		{
-			if (_browserSetUp.UseFireFox)
-			{
-				yield return new FireFox();
-			}
-			if (_browserSetUp.UseInternetExplorer)
-			{
-				yield return new IE
-					{
-						AutoClose = _browserSetUp.AutoCloseIE
-					};
-			}
+			OpenCloseBrowsers(CloseWindows);
 		}
 
-		public bool PassesTest()
+		private void CloseWindows()
+		{
+			_browserProvider.Close();
+			_monitor.Set();
+		}
+
+		public void Initialize()
+		{
+			OpenCloseBrowsers(OpenWindows);
+		}
+
+		private void OpenCloseBrowsers(Action action)
 		{
 			_monitor.Reset();
 
-			var th = new Thread(RunTest);
+			var th = new Thread(action.Invoke);
 			th.SetApartmentState(ApartmentState.STA);
 			th.Start();
+
+			_monitor.WaitOne();
+		}
+
+		private void OpenWindows()
+		{
+			_browserProvider.StartBrowsers();
+			_monitor.Set();
+		}
+
+		public bool PassesTest(IEnumerable<Action<Browser>> testSteps)
+		{
+			_monitor.Reset();
+
+			var thread = new Thread(RunTest);
+			thread.SetApartmentState(ApartmentState.STA);
+			thread.Start(testSteps);
 
 			_monitor.WaitOne();
 
 			return !_failed;
 		}
 
-		private void RunTest()
+		private void RunTest(object steps)
 		{
-			foreach (var browser in GetBrowsers())
+			var testSteps = (IEnumerable<Action<Browser>>)steps;
+			foreach (var browser in _browserProvider.GetBrowsers())
 			{
 				try
 				{
-					foreach (var step in _steps)
+					foreach (var step in testSteps)
 					{
 						step(browser);
+						Thread.Sleep(_waitAfterEachStepInMilliSeconds);
 					}
 				}
 				catch (Exception exception)
@@ -66,14 +86,6 @@ namespace FluentWebUITesting
 					FailureReason = exception.Message;
 					_monitor.Set();
 					return;
-				}
-				finally
-				{
-					if (browser != null)
-					{
-						browser.Close();
-						browser.Dispose();
-					}
 				}
 			}
 			_monitor.Set();

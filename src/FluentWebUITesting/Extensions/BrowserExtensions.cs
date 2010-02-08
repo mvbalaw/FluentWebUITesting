@@ -38,8 +38,8 @@ namespace FluentWebUITesting.Extensions
 
 		public static LinkWrapper LinkWithVisibleText(this Browser browser, [NotNull] string text)
 		{
-			const string linkWithLabel = "link with visible text '{0}'";
-			return new LinkWrapper(browser.Link(Find.ByText(text)), browser, String.Format(linkWithLabel, text));
+			const string linkWithText = "link with visible text '{0}'";
+			return new LinkWrapper(browser.Link(Find.ByText(text)), browser, String.Format(linkWithText, text));
 		}
 
 		public static RadioButtonOptionWrapper RadioButtonOptionWithId(this Browser browser, [NotNull] string idOfOption)
