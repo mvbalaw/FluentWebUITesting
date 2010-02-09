@@ -25,10 +25,11 @@ namespace FluentWebUITesting
 			return null;
 		}
 
-		private static void Close(Browser browser)
+		private void Close(Browser browser)
 		{
 			if (browser != null)
 			{
+				_browsers.Remove(browser);
 				browser.Close();
 				browser.Dispose();
 			}
@@ -42,21 +43,15 @@ namespace FluentWebUITesting
 
 		private void CloseBrowser<T>() where T : Browser
 		{
-			Browser browser;
 			if (String.IsNullOrEmpty(_browserSetUp.BaseUrl))
 			{
-				browser = _browsers.FirstOrDefault(x => x.GetType() == typeof(T));
+				var browser = _browsers.FirstOrDefault(x => x.GetType() == typeof(T));
 				Close(browser);
 			}
 			else
 			{
-				browser = AttachToExistingBrowser<T>();
+				var browser = AttachToExistingBrowser<T>();
 				Close(browser);
-			}
-
-			if (browser != null)
-			{
-				_browsers.Remove(browser);
 			}
 		}
 

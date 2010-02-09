@@ -76,12 +76,11 @@ namespace FluentWebUITesting
 				{
 					_failed = true;
 					FailureReason = exception.Message;
-					CloseBrowserAfterTest();
 					_monitor.Set();
 					return;
 				}
-				CloseBrowserAfterTest();
 			}
+			CloseBrowserAfterTest();
 			_monitor.Set();
 		}
 	}
