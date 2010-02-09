@@ -22,12 +22,12 @@ namespace FluentWebUITesting
 		{
 			var browserSetUp = new BrowserSetUp();
 			action(browserSetUp);
-			if (String.IsNullOrEmpty(browserSetUp.BaseUrl))
+			
+			if (!browserSetUp.CloseBrowserAfterEachTest && String.IsNullOrEmpty(browserSetUp.BaseUrl))
 			{
-				throw new ArgumentException("Base Url cannot be empty");
+				throw new ArgumentException("Base Url cannot be empty if you are not closing your browser after each test");
 			}
-			_runner = new TestRunner(new BrowserProvider(browserSetUp), browserSetUp.WaitAfterEachStepInMilliSeconds);
-			_runner.Initialize();
+			_runner = new TestRunner(new BrowserProvider(browserSetUp), browserSetUp);
 		}
 
 		public static IEnumerable<Action<Browser>> InitializeWorkFlowContainer(params Action<Browser>[] steps)

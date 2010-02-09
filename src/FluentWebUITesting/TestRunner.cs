@@ -9,48 +9,40 @@ namespace FluentWebUITesting
 	internal class TestRunner
 	{
 		private readonly BrowserProvider _browserProvider;
+		private readonly BrowserSetUp _browserSetUp;
 		private readonly ManualResetEvent _monitor = new ManualResetEvent(false);
-		private readonly int _waitAfterEachStepInMilliSeconds;
 		private bool _failed;
 
-		public TestRunner(BrowserProvider browserProvider, int waitAfterEachStepInMilliSeconds)
+		public TestRunner(BrowserProvider browserProvider, BrowserSetUp browserSetUp)
 		{
 			_browserProvider = browserProvider;
-			_waitAfterEachStepInMilliSeconds = waitAfterEachStepInMilliSeconds;
+			_browserSetUp = browserSetUp;
 		}
 
 		public string FailureReason { get; private set; }
 
+		private void CloseBrowserAfterTest()
+		{
+			if (_browserSetUp.CloseBrowserAfterEachTest)
+			{
+				CloseBrowsers();
+			}
+		}
+
 		public void CloseBrowsers()
-		{
-			OpenCloseBrowsers(CloseWindows);
-		}
-
-		private void CloseWindows()
-		{
-			_browserProvider.Close();
-			_monitor.Set();
-		}
-
-		public void Initialize()
-		{
-			OpenCloseBrowsers(OpenWindows);
-		}
-
-		private void OpenCloseBrowsers(Action action)
 		{
 			_monitor.Reset();
 
-			var th = new Thread(action.Invoke);
+			var th = new Thread(CloseWindows);
 			th.SetApartmentState(ApartmentState.STA);
 			th.Start();
 
 			_monitor.WaitOne();
 		}
 
-		private void OpenWindows()
+		private void CloseWindows()
 		{
-			_browserProvider.StartBrowsers();
+			_browserProvider.CloseAllOpenBrowsers();
 			_monitor.Set();
 		}
 
@@ -70,23 +62,25 @@ namespace FluentWebUITesting
 		private void RunTest(object steps)
 		{
 			var testSteps = (IEnumerable<Action<Browser>>)steps;
-			foreach (var browser in _browserProvider.GetBrowsers())
+			foreach (var browser in _browserProvider.GetOpenOrNewBrowsers())
 			{
 				try
 				{
 					foreach (var step in testSteps)
 					{
 						step(browser);
-						Thread.Sleep(_waitAfterEachStepInMilliSeconds);
+						Thread.Sleep(_browserSetUp.WaitAfterEachStepInMilliSeconds);
 					}
 				}
 				catch (Exception exception)
 				{
 					_failed = true;
 					FailureReason = exception.Message;
+					CloseBrowserAfterTest();
 					_monitor.Set();
 					return;
 				}
+				CloseBrowserAfterTest();
 			}
 			_monitor.Set();
 		}
