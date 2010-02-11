@@ -65,6 +65,7 @@
     <Compile Include="BrowserSetUp.cs" />
     <Compile Include="Controls\ButtonWrapper.cs" />
     <Compile Include="Controls\ControlWrapperBase.cs" />
+    <Compile Include="Controls\DivWrapper.cs" />
     <Compile Include="Controls\DropDownListWrapper.cs" />
     <Compile Include="Controls\LabelWrapper.cs" />
     <Compile Include="Controls\LinkWrapper.cs" />

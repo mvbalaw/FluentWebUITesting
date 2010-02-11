@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+
 using FluentWebUITesting.Extensions;
 
 using JetBrains.Annotations;
@@ -21,6 +24,16 @@ namespace FluentWebUITesting.Controls
 		protected override Element Element
 		{
 			get { return _dropDownList; }
+		}
+
+		public string GetSelectedText()
+		{
+			return _dropDownList.SelectedOption.Value;
+		}
+
+		public IEnumerable<string> GetSelectedTexts()
+		{
+			return ((IEnumerable<Option>)_dropDownList.SelectedOptions).Select(x => x.Value);
 		}
 
 		public void SelectOptionWithText([NotNull] string text)

@@ -17,6 +17,12 @@ namespace FluentWebUITesting.Extensions
 			return new ButtonWrapper(browser.Button(Find.ByValue(text)), browser, String.Format(buttonWithLabel, text));
 		}
 
+		public static DivWrapper DivWithId(this Browser browser, [NotNull] string id)
+		{
+			const string divWithID = "div with id '{0}'";
+			return new DivWrapper(browser.Div(Find.ById(id)), String.Format(divWithID, id));
+		}
+
 		public static DropDownListWrapper DropDownListWithId(this Browser browser, [NotNull] string idOfList)
 		{
 			const string dropDownListWithID = "drop down list with id '{0}'";
