@@ -30,6 +30,11 @@ namespace FluentWebUITesting.Extensions
 			                               String.Format(dropDownListWithID, idOfList));
 		}
 
+		public static FileDownloadHandlerWrapper FileDownload(this Browser browser, Action action)
+		{
+			return new FileDownloadHandlerWrapper(browser, action);
+		}
+
 		public static LabelWrapper LabelWithId(this Browser browser, [NotNull] string id)
 		{
 			const string labelWithID = "label with id '{0}'";

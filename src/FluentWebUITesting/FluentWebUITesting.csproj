@@ -67,6 +67,7 @@
     <Compile Include="Controls\ControlWrapperBase.cs" />
     <Compile Include="Controls\DivWrapper.cs" />
     <Compile Include="Controls\DropDownListWrapper.cs" />
+    <Compile Include="Controls\FileDownloadHandlerWrapper.cs" />
     <Compile Include="Controls\LabelWrapper.cs" />
     <Compile Include="Controls\LinkWrapper.cs" />
     <Compile Include="Controls\OptionWrapper.cs" />

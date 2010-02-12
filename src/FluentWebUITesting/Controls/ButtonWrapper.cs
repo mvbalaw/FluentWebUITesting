@@ -27,5 +27,12 @@ namespace FluentWebUITesting.Controls
 
             _browser.WaitForComplete();
         }
+
+		public void ClickNoWait()
+        {
+            Exists().ShouldBeTrue();
+            Enabled().ShouldBeTrue();
+            _button.ClickNoWait();
+        }
     }
 }
