@@ -43,7 +43,7 @@ namespace FluentWebUITesting
 
 		private void CloseBrowser<T>() where T : Browser
 		{
-			if (String.IsNullOrEmpty(_browserSetUp.BaseUrl))
+			if (String.IsNullOrEmpty(_browserSetUp.BaseUrl) || _browserSetUp.CloseBrowserAfterEachTest)
 			{
 				var browser = _browsers.FirstOrDefault(x => x.GetType() == typeof(T));
 				Close(browser);
