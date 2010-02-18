@@ -52,7 +52,8 @@ namespace FluentWebUITesting
 				steps.AddRange(testSteps);
 			}
 
-			_runner.PassesTest(steps).ShouldBeTrue(_runner.FailureReason);
+			var notification = _runner.PassesTest(steps);
+			notification.Success.ShouldBeTrue(notification.Message);
 		}
 	}
 }

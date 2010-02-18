@@ -12,20 +12,19 @@ namespace FluentWebUITesting
 		private readonly BrowserSetUp _browserSetUp;
 		private readonly ManualResetEvent _monitor = new ManualResetEvent(false);
 		private bool _failed;
+		private string _failureReason;
 
 		public TestRunner(BrowserProvider browserProvider, BrowserSetUp browserSetUp)
 		{
 			_browserProvider = browserProvider;
 			_browserSetUp = browserSetUp;
 		}
-
-		public string FailureReason { get; private set; }
-
+        
 		private void CloseBrowserAfterTest()
 		{
 			if (_browserSetUp.CloseBrowserAfterEachTest)
 			{
-				CloseBrowsers();
+				_browserProvider.CloseAllOpenBrowsers();
 			}
 		}
 
@@ -46,17 +45,17 @@ namespace FluentWebUITesting
 			_monitor.Set();
 		}
 
-		public bool PassesTest(IEnumerable<Action<Browser>> testSteps)
+		public Notification PassesTest(IEnumerable<Action<Browser>> testSteps)
 		{
 			_monitor.Reset();
 
-			var thread = new Thread(RunTest);
+			var thread = new Thread(() => RunTest(testSteps));
 			thread.SetApartmentState(ApartmentState.STA);
-			thread.Start(testSteps);
+			thread.Start();
 
 			_monitor.WaitOne();
 
-			return !_failed;
+			return _failed ? new Notification { Success = false, Message = _failureReason } : new Notification {Success = true};
 		}
 
 		private void RunTest(object steps)
@@ -75,12 +74,13 @@ namespace FluentWebUITesting
 				catch (Exception exception)
 				{
 					_failed = true;
-					FailureReason = exception.Message;
+					_failureReason = String.Format("{0}: {1}", browser.GetType().Name, exception.Message);
 					CloseBrowserAfterTest();
 					_monitor.Set();
 					return;
 				}
 			}
+			_failed = false;
 			CloseBrowserAfterTest();
 			_monitor.Set();
 		}

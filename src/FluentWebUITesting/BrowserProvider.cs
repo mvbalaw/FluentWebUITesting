@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using WatiN.Core;
@@ -30,8 +31,20 @@ namespace FluentWebUITesting
 			if (browser != null)
 			{
 				_browsers.Remove(browser);
-				browser.Close();
-				browser.Dispose();
+				int? processId = null;
+				try
+				{
+					processId = browser.ProcessID;
+					browser.Close();
+					browser.Dispose();
+				}
+				catch
+				{
+					if (processId != null)
+					{
+						Process.GetProcessById(processId.Value).Kill();
+					}
+				}
 			}
 		}
 

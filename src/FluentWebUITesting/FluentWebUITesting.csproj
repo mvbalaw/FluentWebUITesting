@@ -81,6 +81,7 @@
     <Compile Include="Extensions\BrowserExtensions.cs" />
     <Compile Include="Extensions\ControlWrapperExtensions.cs" />
     <Compile Include="Extensions\ISelectListExtensions.cs" />
+    <Compile Include="Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestRunner.cs" />
     <Compile Include="UITestRunner.cs" />

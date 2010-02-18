@@ -5,7 +5,7 @@ namespace FluentWebUITesting
 		public BrowserSetUp()
 		{
 			CloseBrowserAfterEachTest = false;
-			WaitAfterEachStepInMilliSeconds = 300;
+			WaitAfterEachStepInMilliSeconds = 500;
 		}
 
 		public string BaseUrl { get; set; }
