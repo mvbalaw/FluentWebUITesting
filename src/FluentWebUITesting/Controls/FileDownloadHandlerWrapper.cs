@@ -3,8 +3,11 @@ using System.IO;
 
 using FluentAssert;
 
+using FluentWebUITesting.Extensions;
+
 using WatiN.Core;
 using WatiN.Core.DialogHandlers;
+using WatiN.Core.Native.Windows;
 
 namespace FluentWebUITesting.Controls
 {
@@ -31,12 +34,19 @@ namespace FluentWebUITesting.Controls
 
 		public void ClickSave(string fullFileNameWithPath)
 		{
+			ClickSave(fullFileNameWithPath, 30, 300);
+		}
+
+		public void ClickSave(string fullFileNameWithPath, int waitDurationInSecondsUntilFileDownloadDialogIsHandled, int waitDurationInSecondsUntilDownloadCompleted)
+		{
+			_browser.WaitForComplete();
+			_browser.BringToFront();
 			var handler = new FileDownloadHandler(fullFileNameWithPath);
 			using (new UseDialogOnce(_browser.DialogWatcher, handler))
 			{
 				_action();
-				handler.WaitUntilFileDownloadDialogIsHandled(30);
-				handler.WaitUntilDownloadCompleted(300);
+				handler.WaitUntilFileDownloadDialogIsHandled(waitDurationInSecondsUntilFileDownloadDialogIsHandled);
+				handler.WaitUntilDownloadCompleted(waitDurationInSecondsUntilDownloadCompleted);
 				File.Exists(fullFileNameWithPath).ShouldBeTrue(String.Format("file {0} should exist", fullFileNameWithPath));
 				File.Delete(fullFileNameWithPath);
 			}

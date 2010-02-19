@@ -52,8 +52,8 @@ namespace FluentWebUITesting
 				steps.AddRange(testSteps);
 			}
 
-			var notification = _runner.PassesTest(steps);
-			notification.Success.ShouldBeTrue(notification.Message);
+			var notification = _runner.PassesTest(steps) ?? new Notification();
+			notification.Success.ShouldBeTrue(notification.ToString());
 		}
 	}
 }

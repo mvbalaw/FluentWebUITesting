@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 
 using FluentWebUITesting.Accessors;
 using FluentWebUITesting.Controls;
@@ -11,6 +12,11 @@ namespace FluentWebUITesting.Extensions
 {
 	public static class BrowserExtensions
 	{
+		public static void AddWait(this Browser browser, int milliseconds)
+		{
+			Thread.Sleep(milliseconds);
+		}
+
 		public static ButtonWrapper ButtonWithVisibleText(this Browser browser, [NotNull] string text)
 		{
 			const string buttonWithLabel = "button with visible text '{0}'";
