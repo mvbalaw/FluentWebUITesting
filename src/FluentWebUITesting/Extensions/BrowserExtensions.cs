@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 
 using FluentWebUITesting.Accessors;
 using FluentWebUITesting.Controls;
@@ -51,6 +52,11 @@ namespace FluentWebUITesting.Extensions
 		{
 			const string linkWithText = "link with visible text '{0}'";
 			return new LinkWrapper(browser.Link(Find.ByText(text)), String.Format(linkWithText, text));
+		}
+
+		public static void Pause(this Browser browser, int milliseconds)
+		{
+			Thread.Sleep(milliseconds);
 		}
 
 		public static RadioButtonOptionWrapper RadioButtonOptionWithId(this Browser browser, [NotNull] string idOfOption)
