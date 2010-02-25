@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 
 using FluentWebUITesting.Accessors;
 using FluentWebUITesting.Controls;
@@ -12,15 +11,10 @@ namespace FluentWebUITesting.Extensions
 {
 	public static class BrowserExtensions
 	{
-		public static void AddWait(this Browser browser, int milliseconds)
-		{
-			Thread.Sleep(milliseconds);
-		}
-
 		public static ButtonWrapper ButtonWithVisibleText(this Browser browser, [NotNull] string text)
 		{
 			const string buttonWithLabel = "button with visible text '{0}'";
-			return new ButtonWrapper(browser.Button(Find.ByValue(text)), browser, String.Format(buttonWithLabel, text));
+			return new ButtonWrapper(browser.Button(Find.ByValue(text)), String.Format(buttonWithLabel, text));
 		}
 
 		public static DivWrapper DivWithId(this Browser browser, [NotNull] string id)
@@ -32,7 +26,7 @@ namespace FluentWebUITesting.Extensions
 		public static DropDownListWrapper DropDownListWithId(this Browser browser, [NotNull] string idOfList)
 		{
 			const string dropDownListWithID = "drop down list with id '{0}'";
-			return new DropDownListWrapper(browser.SelectList(Find.ById(idOfList)), browser,
+			return new DropDownListWrapper(browser.SelectList(Find.ById(idOfList)),
 			                               String.Format(dropDownListWithID, idOfList));
 		}
 
@@ -50,19 +44,19 @@ namespace FluentWebUITesting.Extensions
 		public static LinkWrapper LinkWithId(this Browser browser, [NotNull] string id)
 		{
 			const string linkWithID = "link with id '{0}'";
-			return new LinkWrapper(browser.Link(Find.ById(id)), browser, String.Format(linkWithID, id));
+			return new LinkWrapper(browser.Link(Find.ById(id)), String.Format(linkWithID, id));
 		}
 
 		public static LinkWrapper LinkWithVisibleText(this Browser browser, [NotNull] string text)
 		{
 			const string linkWithText = "link with visible text '{0}'";
-			return new LinkWrapper(browser.Link(Find.ByText(text)), browser, String.Format(linkWithText, text));
+			return new LinkWrapper(browser.Link(Find.ByText(text)), String.Format(linkWithText, text));
 		}
 
 		public static RadioButtonOptionWrapper RadioButtonOptionWithId(this Browser browser, [NotNull] string idOfOption)
 		{
 			const string radioButtonOptionWithID = "radio button option with id '{0}'";
-			return new RadioButtonOptionWrapper(browser.RadioButton(Find.ById(idOfOption)), browser, String.Format(radioButtonOptionWithID, idOfOption));
+			return new RadioButtonOptionWrapper(browser.RadioButton(Find.ById(idOfOption)), String.Format(radioButtonOptionWithID, idOfOption));
 		}
 
 		public static SpanWrapper SpanWithId(this Browser browser, [NotNull] string id)

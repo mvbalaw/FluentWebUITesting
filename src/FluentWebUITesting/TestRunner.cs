@@ -67,7 +67,7 @@ namespace FluentWebUITesting
 					foreach (var step in testSteps)
 					{
 						step(browser);
-						Thread.Sleep(_browserSetUp.WaitAfterEachStepInMilliSeconds);
+						browser.WaitForComplete();
 					}
 				}
 				catch (Exception exception)

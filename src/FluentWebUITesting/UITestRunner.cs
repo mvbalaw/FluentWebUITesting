@@ -22,7 +22,7 @@ namespace FluentWebUITesting
 		{
 			var browserSetUp = new BrowserSetUp();
 			action(browserSetUp);
-			
+
 			if (!browserSetUp.CloseBrowserAfterEachTest && String.IsNullOrEmpty(browserSetUp.BaseUrl))
 			{
 				throw new ArgumentException("Base Url cannot be empty if you are not closing your browser after each test");

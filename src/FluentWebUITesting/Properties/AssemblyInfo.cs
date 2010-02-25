@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("FluentWebUITesting - http://code.google.com/p/fluent-web-ui-testing/ - MIT License")]
+[assembly:AssemblyTitle("FluentWebUITesting - http://code.google.com/p/fluent-web-ui-testing/ - MIT License")]
 [assembly:AssemblyDescription("")]
 [assembly:AssemblyConfiguration("")]
-[assembly: AssemblyCompany("McCreary, Veselka, Bragg & Allen, P.C.")]
+[assembly:AssemblyCompany("McCreary, Veselka, Bragg & Allen, P.C.")]
 [assembly:AssemblyProduct("FluentWebUITesting")]
-[assembly: AssemblyCopyright("Copyright © McCreary, Veselka, Bragg & Allen, P.C. 2010")]
+[assembly:AssemblyCopyright("Copyright © McCreary, Veselka, Bragg & Allen, P.C. 2010")]
 [assembly:AssemblyTrademark("")]
 [assembly:AssemblyCulture("")]
 

@@ -78,6 +78,7 @@
     <Compile Include="Controls\TableRowWrapper.cs" />
     <Compile Include="Controls\TableWrapper.cs" />
     <Compile Include="Controls\TextBoxWrapper.cs" />
+    <Compile Include="Controls\WaitWrapper.cs" />
     <Compile Include="Extensions\BrowserExtensions.cs" />
     <Compile Include="Extensions\ControlWrapperExtensions.cs" />
     <Compile Include="Extensions\ISelectListExtensions.cs" />

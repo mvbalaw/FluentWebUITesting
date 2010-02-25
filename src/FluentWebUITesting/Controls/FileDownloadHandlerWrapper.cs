@@ -3,11 +3,8 @@ using System.IO;
 
 using FluentAssert;
 
-using FluentWebUITesting.Extensions;
-
 using WatiN.Core;
 using WatiN.Core.DialogHandlers;
-using WatiN.Core.Native.Windows;
 
 namespace FluentWebUITesting.Controls
 {
@@ -39,7 +36,6 @@ namespace FluentWebUITesting.Controls
 
 		public void ClickSave(string fullFileNameWithPath, int waitDurationInSecondsUntilFileDownloadDialogIsHandled, int waitDurationInSecondsUntilDownloadCompleted)
 		{
-			_browser.WaitForComplete();
 			_browser.BringToFront();
 			var handler = new FileDownloadHandler(fullFileNameWithPath);
 			using (new UseDialogOnce(_browser.DialogWatcher, handler))

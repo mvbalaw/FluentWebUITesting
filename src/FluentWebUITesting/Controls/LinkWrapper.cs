@@ -2,30 +2,27 @@ using WatiN.Core;
 
 namespace FluentWebUITesting.Controls
 {
-    public class LinkWrapper : ControlWrapperBase
-    {
-        private readonly Browser _browser;
-        private readonly Link _link;
+	public class LinkWrapper : ControlWrapperBase
+	{
+		private readonly Link _link;
 
-        public LinkWrapper(Link link, Browser browser, string howFound)
-            : base(howFound)
-        {
-            _link = link;
-            _browser = browser;
-        }
+		public LinkWrapper(Link link, string howFound)
+			: base(howFound)
+		{
+			_link = link;
+		}
 
-        protected override Element Element
-        {
-            get { return _link; }
-        }
+		protected override Element Element
+		{
+			get { return _link; }
+		}
 
-        public void Click()
-        {
-            Exists().ShouldBeTrue();
-            Enabled().ShouldBeTrue();
-            _link.Click();
-
-            _browser.WaitForComplete();
-        }
-    }
+		public WaitWrapper Click()
+		{
+			Exists().ShouldBeTrue();
+			Enabled().ShouldBeTrue();
+			_link.Click();
+			return new WaitWrapper();
+		}
+	}
 }

@@ -11,14 +11,12 @@ namespace FluentWebUITesting.Controls
 {
 	public class DropDownListWrapper : ControlWrapperBase
 	{
-		private readonly Browser _browser;
 		private readonly SelectList _dropDownList;
 
-		public DropDownListWrapper(SelectList dropDownList, Browser browser, string howFound)
+		public DropDownListWrapper(SelectList dropDownList, string howFound)
 			: base(howFound)
 		{
 			_dropDownList = dropDownList;
-			_browser = browser;
 		}
 
 		protected override Element Element
@@ -36,22 +34,22 @@ namespace FluentWebUITesting.Controls
 			return ((IEnumerable<Option>)_dropDownList.SelectedOptions).Select(x => x.Value);
 		}
 
-		public void SelectOptionWithText([NotNull] string text)
+		public WaitWrapper SelectOptionWithText([NotNull] string text)
 		{
 			Verify();
 			var option = _dropDownList.OptionWithText(text);
 			option.Exists().ShouldBeTrue();
 			_dropDownList.Select(option.Text().GetValue());
-			_browser.WaitForComplete();
+			return new WaitWrapper();
 		}
 
-		public void SelectOptionWithValue([NotNull] string text)
+		public WaitWrapper SelectOptionWithValue([NotNull] string text)
 		{
 			Verify();
 			var option = _dropDownList.OptionWithValue(text);
 			option.Exists().ShouldBeTrue();
 			_dropDownList.Select(option.Text().GetValue());
-			_browser.WaitForComplete();
+			return new WaitWrapper();
 		}
 
 		private void Verify()
