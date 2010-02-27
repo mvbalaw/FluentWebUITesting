@@ -9,7 +9,7 @@ using WatiN.Core;
 
 namespace FluentWebUITesting
 {
-	public class UITestRunner
+	public static class UITestRunner
 	{
 		private static TestRunner _runner;
 
@@ -21,7 +21,10 @@ namespace FluentWebUITesting
 		public static void InitializeBrowsers(Action<BrowserSetUp> action)
 		{
 			var browserSetUp = new BrowserSetUp();
-			action(browserSetUp);
+			if (action != null)
+			{
+				action(browserSetUp);
+			}
 
 			if (!browserSetUp.CloseBrowserAfterEachTest && String.IsNullOrEmpty(browserSetUp.BaseUrl))
 			{
@@ -42,11 +45,11 @@ namespace FluentWebUITesting
 			Console.WriteLine(url);
 
 			var steps = new List<Action<Browser>>
-				{
-					b => b.GoTo(url),
-					b => b.WaitForComplete(),
-					b => b.Title.ShouldBeEqualTo(initialPageTitle, "incorrect page title")
-				};
+			{
+				b => b.GoTo(url),
+				b => b.WaitForComplete(),
+				b => b.Title.ShouldBeEqualTo(initialPageTitle, "incorrect page title")
+			};
 			if (testSteps != null)
 			{
 				steps.AddRange(testSteps);

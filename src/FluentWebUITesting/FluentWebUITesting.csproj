@@ -35,6 +35,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\FluentAssert\FluentAssert.dll</HintPath>
     </Reference>
+    <Reference Include="Interop.SHDocVw, Version=1.1.0.0, Culture=neutral, PublicKeyToken=db7cfd3acb5ad44e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\WatiN\Interop.SHDocVw.dll</HintPath>
+    </Reference>
     <Reference Include="JetBrains.Annotations, Version=4.5.1230.4, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\JetBrains.Annotations\JetBrains.Annotations.dll</HintPath>

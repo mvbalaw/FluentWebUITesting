@@ -60,28 +60,41 @@ namespace FluentWebUITesting
 		private void RunTest(object steps, out Notification notification)
 		{
 			var testSteps = (IEnumerable<Action<Browser>>)steps;
-			foreach (var browser in _browserProvider.GetOpenOrNewBrowsers())
+			try
 			{
-				try
+				foreach (var browser in _browserProvider.GetOpenOrNewBrowsers())
 				{
-					foreach (var step in testSteps)
+					try
 					{
-						step(browser);
-						browser.WaitForComplete();
+						foreach (var step in testSteps)
+						{
+							step(browser);
+							browser.WaitForComplete();
+						}
 					}
-				}
-				catch (Exception exception)
-				{
-					notification = new Notification
+					catch (Exception exception)
+					{
+						notification = new Notification
 						{
 							Success = false,
 							Message = exception.Message,
 							BrowserType = browser.GetType().Name
 						};
-					CloseBrowserAfterTest();
-					_monitor.Set();
-					return;
+						CloseBrowserAfterTest();
+						_monitor.Set();
+						return;
+					}
 				}
+			}
+			catch(Exception exception)
+			{
+				notification = new Notification
+				{
+					Success = false,
+					Message = "While getting browser: "+ exception.Message
+				};
+				_monitor.Set();
+				return;
 			}
 			notification = new Notification
 				{
