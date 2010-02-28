@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,22 +35,32 @@ namespace FluentWebUITesting.Controls
 			return ((IEnumerable<Option>)_dropDownList.SelectedOptions).Select(x => x.Value);
 		}
 
-		public WaitWrapper SelectOptionWithText([NotNull] string text)
+		public OptionWrapper OptionWithText([NotNull] string text)
 		{
 			Verify();
 			var option = _dropDownList.OptionWithText(text);
-			option.Exists().ShouldBeTrue();
-			_dropDownList.Select(option.Text().GetValue());
-			return new WaitWrapper();
+			return option;
 		}
 
-		public WaitWrapper SelectOptionWithValue([NotNull] string text)
+		public OptionWrapper OptionWithValue([NotNull] string text)
 		{
 			Verify();
 			var option = _dropDownList.OptionWithValue(text);
-			option.Exists().ShouldBeTrue();
-			_dropDownList.Select(option.Text().GetValue());
-			return new WaitWrapper();
+			return option;
+		}
+
+		[Obsolete("Use .OptionWithText(text).Select()")]
+		public WaitWrapper SelectOptionWithText([NotNull] string text)
+		{
+			var option = OptionWithText(text);
+			return option.Select();
+		}
+
+		[Obsolete("Use .OptionWithValue(text).Select()")]
+		public WaitWrapper SelectOptionWithValue([NotNull] string text)
+		{
+			var option = OptionWithValue(text);
+			return option.Select();
 		}
 
 		private void Verify()
