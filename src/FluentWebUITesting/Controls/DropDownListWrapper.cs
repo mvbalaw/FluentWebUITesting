@@ -27,12 +27,12 @@ namespace FluentWebUITesting.Controls
 
 		public string GetSelectedText()
 		{
-			return _dropDownList.SelectedOption.Value;
+			return _dropDownList.SelectedOption.Text;
 		}
 
 		public IEnumerable<string> GetSelectedTexts()
 		{
-			return ((IEnumerable<Option>)_dropDownList.SelectedOptions).Select(x => x.Value);
+			return ((IEnumerable<Option>)_dropDownList.SelectedOptions).Select(x => x.Text);
 		}
 
 		public OptionWrapper OptionWithText([NotNull] string text)
