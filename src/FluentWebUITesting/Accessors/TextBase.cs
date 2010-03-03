@@ -18,16 +18,15 @@ namespace FluentWebUITesting.Accessors
 
 		private string Text { get; set; }
 
-		public Result Contains([NotNull] string containedText)
+		public IReadOnlyBooleanState Contains([NotNull] string containedText)
 		{
 			const string unexpectedlyTrue = "The text '{0}' in {1} should not start with '{2}'";
 			const string unexpectedlyFalse = "The text '{0}' in {1} should start with '{2}'";
-			var result = new Result
-				{
-					Passed = Text.Contains(containedText),
-					UnexpectedlyTrueMessage = String.Format(unexpectedlyTrue, Text, _howFound, containedText),
-					UnexpectedlyFalseMessage = String.Format(unexpectedlyFalse, Text, _howFound, containedText)
-				};
+			string unexpectedlyFalseMessage = String.Format(unexpectedlyFalse, Text, _howFound, containedText);
+			string unexpectedlyTrueMessage = String.Format(unexpectedlyTrue, Text, _howFound, containedText);
+			var result = new BooleanState(unexpectedlyFalseMessage,
+			                              unexpectedlyTrueMessage,
+			                              () => Text.Contains(containedText));
 			return result;
 		}
 
@@ -44,7 +43,7 @@ namespace FluentWebUITesting.Accessors
 
 		public void ShouldBeEqualTo([NotNull] string text, string errorMessage)
 		{
-			string expected = text ?? "";
+			string expected = text;
 			string actual = Text ?? "";
 			actual.ShouldBeEqualTo(expected, errorMessage);
 		}
@@ -57,21 +56,20 @@ namespace FluentWebUITesting.Accessors
 
 		public void ShouldNotBeEqualTo([NotNull] string text, string errorMessage)
 		{
-			string expected = text ?? "";
+			string expected = text;
 			string actual = Text ?? "";
 			actual.ShouldNotBeEqualTo(expected, errorMessage);
 		}
 
-		public Result StartsWith([NotNull] string startingText)
+		public IReadOnlyBooleanState StartsWith([NotNull] string startingText)
 		{
 			const string unexpectedlyTrue = "The text '{0}' in {1} should not contain '{2}'";
 			const string unexpectedlyFalse = "The text '{0}' in {1} should contain '{2}'";
-			var result = new Result
-				{
-					Passed = Text.StartsWith(startingText),
-					UnexpectedlyTrueMessage = String.Format(unexpectedlyTrue, Text, _howFound, startingText),
-					UnexpectedlyFalseMessage = String.Format(unexpectedlyFalse, Text, _howFound, startingText)
-				};
+			var unexpectedlyTrueMessage = String.Format(unexpectedlyTrue, Text, _howFound, startingText);
+			var unexpectedlyFalseMessage = String.Format(unexpectedlyFalse, Text, _howFound, startingText);
+			var result = new BooleanState(unexpectedlyFalseMessage,
+			                              unexpectedlyTrueMessage,
+			                              () => Text.StartsWith(startingText));
 			return result;
 		}
 	}

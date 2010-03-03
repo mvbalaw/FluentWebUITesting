@@ -1,3 +1,5 @@
+using WatiN.Core;
+
 namespace FluentWebUITesting.Accessors
 {
 	public class ReadOnlyText : TextBase

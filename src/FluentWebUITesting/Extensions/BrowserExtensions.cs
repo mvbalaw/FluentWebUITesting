@@ -18,6 +18,12 @@ namespace FluentWebUITesting.Extensions
 			return new ButtonWrapper(browser.Button(Find.ByValue(text)), String.Format(buttonWithLabel, text));
 		}
 
+		public static CheckBoxWrapper CheckBoxWithId(this Browser browser, [NotNull] string id)
+		{
+			const string checkBoxWithId = "checkbox with id '{0}'";
+			return new CheckBoxWrapper(browser.CheckBox(Find.ById(id)), String.Format(checkBoxWithId, id));
+		}
+
 		public static DivWrapper DivWithId(this Browser browser, [NotNull] string id)
 		{
 			const string divWithID = "div with id '{0}'";

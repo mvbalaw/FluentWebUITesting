@@ -16,29 +16,27 @@ namespace FluentWebUITesting.Controls
 		protected abstract Element Element { get; }
 		protected string HowFound { get; private set; }
 
-		public Result Enabled()
+		public IReadOnlyBooleanState Enabled()
 		{
 			const string unexpectedlyFalse = "{0} is not enabled but should be.";
 			const string unexpectedlyTrue = "{0} is enabled but should not be.";
-			var result = new Result
-				{
-					Passed = Element.Enabled,
-					UnexpectedlyTrueMessage = String.Format(unexpectedlyTrue, HowFound),
-					UnexpectedlyFalseMessage = String.Format(unexpectedlyFalse, HowFound)
-				};
+			string unexpectedlyTrueMessage = String.Format(unexpectedlyTrue, HowFound);
+			string unexpectedlyFalseMessage = String.Format(unexpectedlyFalse, HowFound);
+			var result = new BooleanState(unexpectedlyFalseMessage,
+			                              unexpectedlyTrueMessage, 
+										  () => Element.Enabled);
 			return result;
 		}
 
-		public Result Exists()
+		public IReadOnlyBooleanState Exists()
 		{
 			const string unexpectedlyFalse = "{0} does not exist but should.";
 			const string unexpectedlyTrue = "{0} exists but should not.";
-			var result = new Result
-				{
-					Passed = Element.Exists,
-					UnexpectedlyTrueMessage = String.Format(unexpectedlyTrue, HowFound),
-					UnexpectedlyFalseMessage = String.Format(unexpectedlyFalse, HowFound)
-				};
+			string unexpectedlyTrueMessage = String.Format(unexpectedlyTrue, HowFound);
+			string unexpectedlyFalseMessage = String.Format(unexpectedlyFalse, HowFound);
+			var result = new BooleanState(unexpectedlyFalseMessage,
+			                              unexpectedlyTrueMessage,
+										  () => Element.Exists);
 			return result;
 		}
 	}

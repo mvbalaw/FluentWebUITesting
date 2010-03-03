@@ -61,13 +61,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Accessors\BooleanState.cs" />
     <Compile Include="Accessors\EditableText.cs" />
     <Compile Include="Accessors\ReadOnlyText.cs" />
-    <Compile Include="Accessors\Result.cs" />
     <Compile Include="Accessors\TextBase.cs" />
     <Compile Include="BrowserProvider.cs" />
     <Compile Include="BrowserSetUp.cs" />
     <Compile Include="Controls\ButtonWrapper.cs" />
+    <Compile Include="Controls\CheckBoxWrapper.cs" />
     <Compile Include="Controls\ControlWrapperBase.cs" />
     <Compile Include="Controls\DivWrapper.cs" />
     <Compile Include="Controls\DropDownListWrapper.cs" />
