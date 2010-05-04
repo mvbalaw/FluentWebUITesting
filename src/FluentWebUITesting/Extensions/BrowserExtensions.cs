@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 
 using FluentWebUITesting.Accessors;
@@ -21,7 +22,15 @@ namespace FluentWebUITesting.Extensions
 		public static CheckBoxWrapper CheckBoxWithId(this Browser browser, [NotNull] string id)
 		{
 			const string checkBoxWithId = "checkbox with id '{0}'";
-			return new CheckBoxWrapper(browser.CheckBox(Find.ById(id)), String.Format(checkBoxWithId, id));
+			var checkBox = browser.CheckBoxes.FirstOrDefault(x=>x.Id == id)??browser.CheckBox(Find.ById(id));
+			return new CheckBoxWrapper(checkBox, String.Format(checkBoxWithId, id));
+		}
+
+		public static CheckBoxWrapper CheckBoxWithIdAndValue(this Browser browser, [NotNull] string id, [NotNull] string value)
+		{
+			const string message = "checkbox with id '{0}' and value '{1}'";
+			var checkBox = browser.CheckBoxes.FirstOrDefault(x=>x.Id == id && x.GetAttributeValue("value") == value)??browser.CheckBox(Find.ById(id));
+			return new CheckBoxWrapper(checkBox, String.Format(message, id, value));
 		}
 
 		public static DivWrapper DivWithId(this Browser browser, [NotNull] string id)
