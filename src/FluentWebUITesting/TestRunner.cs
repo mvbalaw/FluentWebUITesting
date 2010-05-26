@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
-
 using WatiN.Core;
 
 namespace FluentWebUITesting
 {
-	internal class TestRunner
+	public interface IBrowserProxy
+	{
+		void Do(Action<Browser> action);
+	}
+
+	public class TestRunner : IBrowserProxy
 	{
 		private readonly BrowserProvider _browserProvider;
 		private readonly BrowserSetUp _browserSetUp;
@@ -59,7 +64,7 @@ namespace FluentWebUITesting
 
 		private void RunTest(object steps, out Notification notification)
 		{
-			var testSteps = (IEnumerable<Action<Browser>>)steps;
+			var testSteps = (IEnumerable<Action<Browser>>) steps;
 			try
 			{
 				foreach (var browser in _browserProvider.GetOpenOrNewBrowsers())
@@ -68,40 +73,51 @@ namespace FluentWebUITesting
 					{
 						foreach (var step in testSteps)
 						{
-							step(browser);
-							browser.WaitForComplete();
+							Do(step, browser);
 						}
 					}
 					catch (Exception exception)
 					{
 						notification = new Notification
-						{
-							Success = false,
-							Message = exception.Message,
-							BrowserType = browser.GetType().Name
-						};
+						               	{
+						               		Success = false,
+						               		Message = exception.Message,
+						               		BrowserType = browser.GetType().Name
+						               	};
 						CloseBrowserAfterTest();
 						_monitor.Set();
 						return;
 					}
 				}
 			}
-			catch(Exception exception)
+			catch (Exception exception)
 			{
 				notification = new Notification
-				{
-					Success = false,
-					Message = "While getting browser: "+ exception.Message
-				};
+				               	{
+				               		Success = false,
+				               		Message = "While getting browser: " + exception.Message
+				               	};
 				_monitor.Set();
 				return;
 			}
 			notification = new Notification
-				{
-					Success = true
-				};
+			               	{
+			               		Success = true
+			               	};
 			CloseBrowserAfterTest();
 			_monitor.Set();
+		}
+
+		public void Do(Action<Browser> action)
+		{
+			var browser = _browserProvider.GetOpenOrNewBrowsers().First();
+			Do(action, browser);
+		}
+
+		private static void Do(Action<Browser> action, Browser browser)
+		{
+			action(browser);
+			browser.WaitForComplete();
 		}
 	}
 }

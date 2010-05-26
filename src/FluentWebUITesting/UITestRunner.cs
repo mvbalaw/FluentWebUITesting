@@ -58,5 +58,10 @@ namespace FluentWebUITesting
 			var notification = _runner.PassesTest(steps) ?? new Notification();
 			notification.Success.ShouldBeTrue(notification.ToString());
 		}
+
+		public static IBrowserProxy GetBrowser()
+		{
+			return _runner;
+		}
 	}
 }
