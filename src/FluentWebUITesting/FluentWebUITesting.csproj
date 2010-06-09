@@ -70,6 +70,7 @@
     <Compile Include="Controls\ButtonWrapper.cs" />
     <Compile Include="Controls\CheckBoxWrapper.cs" />
     <Compile Include="Controls\ControlWrapperBase.cs" />
+    <Compile Include="Controls\DialogHandlerWrapper.cs" />
     <Compile Include="Controls\DivWrapper.cs" />
     <Compile Include="Controls\DropDownListWrapper.cs" />
     <Compile Include="Controls\FileDownloadHandlerWrapper.cs" />
