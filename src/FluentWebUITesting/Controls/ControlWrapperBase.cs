@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FluentWebUITesting.Accessors;
 using WatiN.Core;
 
@@ -40,32 +41,48 @@ namespace FluentWebUITesting.Controls
 
         public IReadOnlyBooleanState Visible()
         {
-            const string unexpectedlyFalse = "{0} is not visible but should be.";
-            const string unexpectedlyTrue = "{0} is visible but should not be.";
+            const string unexpectedlyFalse = "{0} should be visible but is not because {1} is marked display: none .";
+            const string unexpectedlyTrue = "{0} should not be visible but is.";
+            var visibility = IsDisplayed(Element);
+            string parent;
+            if (visibility.Value != null)
+            {
+                parent = "its parent tag " + visibility.Value;
+            }
+            else
+            {
+                parent = "it";
+            }
             string unexpectedlyTrueMessage = String.Format(unexpectedlyTrue, HowFound);
-            string unexpectedlyFalseMessage = String.Format(unexpectedlyFalse, HowFound);
+            string unexpectedlyFalseMessage = String.Format(unexpectedlyFalse, HowFound, parent);
+
             var result = new BooleanState(unexpectedlyFalseMessage,
                                           unexpectedlyTrueMessage,
-                                          () => IsDisplayed(Element));
+                                          () => visibility.Key);
             return result;
         }
 
-        // source http://blog.coditate.com/2009/07/determining-html-element-visibility.html
-        private static bool IsDisplayed(Element element)
+        // adapted from http://blog.coditate.com/2009/07/determining-html-element-visibility.html
+        private static KeyValuePair<bool, string> IsDisplayed(Element element)
         {
             if (string.Equals(element.Style.Display, "none"))
             {
-                return false;
+                return new KeyValuePair<bool, string>(false, element.TagName);
             }
-            if (string.Equals(element.TagName,"form",StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(element.TagName, "form", StringComparison.InvariantCultureIgnoreCase))
             {
-                return true;
+                return new KeyValuePair<bool, string>(true, null);
             }
             if (element.Parent != null)
             {
-                return IsDisplayed(element.Parent);
+                var result = IsDisplayed(element.Parent);
+                if (result.Key)
+                {
+                    return result;
+                }
+                return new KeyValuePair<bool, string>(false, element.TagName + "." + result.Value);
             }
-            return true;
+            return new KeyValuePair<bool, string>(true, null);
         }
     }
 }
