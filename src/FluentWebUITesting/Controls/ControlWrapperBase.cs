@@ -57,6 +57,10 @@ namespace FluentWebUITesting.Controls
             {
                 return false;
             }
+            if (string.Equals(element.TagName,"form",StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
             if (element.Parent != null)
             {
                 return IsDisplayed(element.Parent);
