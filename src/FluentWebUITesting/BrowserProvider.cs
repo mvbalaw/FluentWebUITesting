@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-
 using WatiN.Core;
 
 namespace FluentWebUITesting
 {
 	public class BrowserProvider
 	{
-		private readonly List<Browser> _browsers = new List<Browser>();
+		private static string _hwnd;
 		private readonly BrowserSetUp _browserSetUp;
+		private readonly List<Browser> _browsers = new List<Browser>();
 
 		public BrowserProvider(BrowserSetUp browserSetUp)
 		{
@@ -19,9 +19,9 @@ namespace FluentWebUITesting
 
 		private Browser AttachToExistingBrowser<T>() where T : Browser
 		{
-			if (!_browserSetUp.CloseBrowserAfterEachTest && _browsers.Exists(x => x.GetType() == typeof(T)))
+			if (!_browserSetUp.CloseBrowserAfterEachTest && _browsers.Exists(x => x.GetType() == typeof (T)))
 			{
-				return Browser.AttachTo<T>(Find.ByUrl(x => x.Contains(_browserSetUp.BaseUrl)));
+				return Browser.AttachTo<T>(Find.By("hwnd", _hwnd));
 			}
 			return null;
 		}
@@ -58,7 +58,7 @@ namespace FluentWebUITesting
 		{
 			if (String.IsNullOrEmpty(_browserSetUp.BaseUrl) || _browserSetUp.CloseBrowserAfterEachTest)
 			{
-				var browser = _browsers.FirstOrDefault(x => x.GetType() == typeof(T));
+				var browser = _browsers.FirstOrDefault(x => x.GetType() == typeof (T));
 				Close(browser);
 			}
 			else
@@ -73,12 +73,14 @@ namespace FluentWebUITesting
 			if (_browserSetUp.UseFireFox)
 			{
 				var firefox = AttachToExistingBrowser<FireFox>() ?? StartNewFirefox();
+				_hwnd = firefox.hWnd.ToString();
 				yield return firefox;
 			}
 
 			if (_browserSetUp.UseInternetExplorer)
 			{
 				var ie = AttachToExistingBrowser<IE>() ?? StartNewIE();
+				_hwnd = ie.hWnd.ToString();
 				yield return ie;
 			}
 		}
@@ -92,10 +94,12 @@ namespace FluentWebUITesting
 
 		private IE StartNewIE()
 		{
-			var ie = String.IsNullOrEmpty(_browserSetUp.BaseUrl) ? new IE
-				{
-					AutoClose = true
-				} : new IE(_browserSetUp.BaseUrl);
+			var ie = String.IsNullOrEmpty(_browserSetUp.BaseUrl)
+			         	? new IE
+			         	  	{
+			         	  		AutoClose = true
+			         	  	}
+			         	: new IE(_browserSetUp.BaseUrl);
 			_browsers.Add(ie);
 			return ie;
 		}
