@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentWebUITesting", "FluentWebUITesting\FluentWebUITesting.csproj", "{EDFFC55B-01CA-42BB-8B2C-B2C172CF5E6B}"
 EndProject
 Global
