@@ -56,6 +56,7 @@ namespace FluentWebUITesting
 			var thread = new Thread(() => RunTest(testSteps, out notification));
 			thread.SetApartmentState(ApartmentState.STA);
 			thread.Start();
+			thread.Join();
 
 			_monitor.WaitOne();
 
