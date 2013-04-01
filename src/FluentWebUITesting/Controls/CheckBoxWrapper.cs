@@ -1,31 +1,48 @@
 using FluentWebUITesting.Accessors;
+using FluentWebUITesting.Extensions;
 
-using WatiN.Core;
+using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Controls
 {
 	public class CheckBoxWrapper : ControlWrapperBase
 	{
-		private readonly CheckBox _checkBox;
+		private readonly IWebDriver _browser;
+		private readonly IWebElement _checkBox;
 
-		public CheckBoxWrapper(CheckBox checkBox, string howFound)
+		public CheckBoxWrapper(IWebElement checkBox, string howFound, IWebDriver browser)
 			: base(howFound)
 		{
 			_checkBox = checkBox;
+			_browser = browser;
 		}
 
-		protected override Element Element
+		internal CheckBoxWrapper(CheckBoxWrapper checkBox, string howFound)
+			: base(howFound)
+		{
+			_checkBox = checkBox == null ? null : checkBox.Element;
+		}
+
+		public override IWebElement Element
 		{
 			get { return _checkBox; }
+		}
+		protected override bool ElementExists
+		{
+			get { return _checkBox != null; }
 		}
 
 		public BooleanState CheckedState()
 		{
 			Exists().ShouldBeTrue();
-			return new BooleanState(HowFound+" should have been checked but was not",
-			                        HowFound+" should not have been checked but was",
-			                        ()=>_checkBox.Checked,
-			                        value=>_checkBox.Checked = value);
+			return new BooleanState(HowFound + " should have been checked but was not",
+			                        HowFound + " should not have been checked but was",
+			                        () => _checkBox.Selected,
+			                        value =>
+				                        {
+					                        _browser.Focus(_checkBox);
+					                        _checkBox.Click();
+				                        });
 		}
 	}
 }

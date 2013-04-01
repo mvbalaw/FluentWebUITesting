@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using WatiN.Core;
+
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.IE;
 
 namespace FluentWebUITesting
 {
@@ -10,39 +14,43 @@ namespace FluentWebUITesting
 	{
 		private static string _hwnd;
 		private readonly BrowserSetUp _browserSetUp;
-		private readonly List<Browser> _browsers = new List<Browser>();
+		private readonly List<IWebDriver> _browsers = new List<IWebDriver>();
 
 		public BrowserProvider(BrowserSetUp browserSetUp)
 		{
 			_browserSetUp = browserSetUp;
 		}
 
-		private Browser AttachToExistingBrowser<T>() where T : Browser
+		private IWebDriver AttachToExistingBrowser<T>() where T : IWebDriver
 		{
-			if (!_browserSetUp.CloseBrowserAfterEachTest && _browsers.Exists(x => x.GetType() == typeof (T)))
+			if (!_browserSetUp.CloseBrowserAfterEachTest && _browsers.Exists(x => x.GetType() == typeof(T)))
 			{
-				return Browser.AttachTo<T>(Find.By("hwnd", _hwnd));
+				var browser = _browsers.First(x => x.GetType() == typeof(T));
+				return browser;
 			}
 			return null;
 		}
 
-		private void Close(Browser browser)
+		private void Close(IWebDriver browser)
 		{
 			if (browser != null)
 			{
 				_browsers.Remove(browser);
-				int? processId = null;
+				var windowHandle = browser.CurrentWindowHandle;
 				try
 				{
-					processId = browser.ProcessID;
-					browser.Close();
+					browser.Quit();
 					browser.Dispose();
 				}
 				catch
 				{
-					if (processId != null)
+					if (windowHandle != null)
 					{
-						Process.GetProcessById(processId.Value).Kill();
+						var process = Process.GetProcesses().FirstOrDefault(x => x.MainWindowHandle == new IntPtr(Int32.Parse(windowHandle)));
+						if (process != null)
+						{
+							process.Kill();
+						}
 					}
 				}
 			}
@@ -50,15 +58,16 @@ namespace FluentWebUITesting
 
 		public void CloseAllOpenBrowsers()
 		{
-			CloseBrowser<IE>();
-			CloseBrowser<FireFox>();
+			CloseBrowser<InternetExplorerDriver>();
+			CloseBrowser<FirefoxDriver>();
+			CloseBrowser<ChromeDriver>();
 		}
 
-		private void CloseBrowser<T>() where T : Browser
+		private void CloseBrowser<T>() where T : IWebDriver
 		{
 			if (String.IsNullOrEmpty(_browserSetUp.BaseUrl) || _browserSetUp.CloseBrowserAfterEachTest)
 			{
-				var browser = _browsers.FirstOrDefault(x => x.GetType() == typeof (T));
+				var browser = _browsers.FirstOrDefault(x => x.GetType() == typeof(T));
 				Close(browser);
 			}
 			else
@@ -68,40 +77,31 @@ namespace FluentWebUITesting
 			}
 		}
 
-		public IEnumerable<Browser> GetOpenOrNewBrowsers()
+		public IEnumerable<IWebDriver> GetOpenOrNewBrowsers()
 		{
+			if (_browserSetUp.UseChrome)
+			{
+				var driver = AttachToExistingBrowser<ChromeDriver>() ?? new ChromeDriver();
+				_hwnd = driver.CurrentWindowHandle;
+				_browsers.Add(driver);
+				yield return driver;
+			}
+
 			if (_browserSetUp.UseFireFox)
 			{
-				var firefox = AttachToExistingBrowser<FireFox>() ?? StartNewFirefox();
-				_hwnd = firefox.hWnd.ToString();
-				yield return firefox;
+				var driver = AttachToExistingBrowser<FirefoxDriver>() ?? new FirefoxDriver();
+				_hwnd = driver.CurrentWindowHandle;
+				_browsers.Add(driver);
+				yield return driver;
 			}
 
 			if (_browserSetUp.UseInternetExplorer)
 			{
-				var ie = AttachToExistingBrowser<IE>() ?? StartNewIE();
-				_hwnd = ie.hWnd.ToString();
-				yield return ie;
+				var driver = AttachToExistingBrowser<InternetExplorerDriver>() ?? new InternetExplorerDriver();
+				_hwnd = driver.CurrentWindowHandle;
+				_browsers.Add(driver);
+				yield return driver;
 			}
-		}
-
-		private FireFox StartNewFirefox()
-		{
-			var firefox = String.IsNullOrEmpty(_browserSetUp.BaseUrl) ? new FireFox() : new FireFox(_browserSetUp.BaseUrl);
-			_browsers.Add(firefox);
-			return firefox;
-		}
-
-		private IE StartNewIE()
-		{
-			var ie = String.IsNullOrEmpty(_browserSetUp.BaseUrl)
-			         	? new IE
-			         	  	{
-			         	  		AutoClose = true
-			         	  	}
-			         	: new IE(_browserSetUp.BaseUrl);
-			_browsers.Add(ie);
-			return ie;
 		}
 	}
 }

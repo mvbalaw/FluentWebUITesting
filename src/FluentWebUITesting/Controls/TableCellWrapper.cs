@@ -1,22 +1,26 @@
 using FluentWebUITesting.Accessors;
 
-using WatiN.Core;
+using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Controls
 {
 	public class TableCellWrapper : ControlWrapperBase
 	{
-		private readonly TableCell _tableCell;
+		private readonly IWebElement _tableCell;
 
-		public TableCellWrapper(TableCell tableCell, string howFound)
+		public TableCellWrapper(IWebElement tableCell, string howFound)
 			: base(howFound)
 		{
 			_tableCell = tableCell;
 		}
 
-		protected override Element Element
+		public override IWebElement Element
 		{
 			get { return _tableCell; }
+		}
+		protected override bool ElementExists
+		{
+			get { return _tableCell != null; }
 		}
 
 		public ReadOnlyText Text()
@@ -27,17 +31,21 @@ namespace FluentWebUITesting.Controls
 
 	public class TableHeaderCellWrapper : ControlWrapperBase
 	{
-		private readonly Element _tableCell;
+		private readonly IWebElement _tableCell;
 
-		public TableHeaderCellWrapper(Element tableCell, string howFound)
+		public TableHeaderCellWrapper(IWebElement tableCell, string howFound)
 			: base(howFound)
 		{
 			_tableCell = tableCell;
 		}
 
-		protected override Element Element
+		public override IWebElement Element
 		{
 			get { return _tableCell; }
+		}
+		protected override bool ElementExists
+		{
+			get { return _tableCell != null; }
 		}
 
 		public ReadOnlyText Text()

@@ -1,25 +1,29 @@
 using System;
+using System.Linq;
 
 using FluentWebUITesting.Controls;
 
 using JetBrains.Annotations;
 
-using WatiN.Core;
+using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Extensions
 {
 	public static class ISelectListExtensions
 	{
-		public static OptionWrapper OptionWithText(this SelectList dropDownList, [NotNull] string text)
+		public static OptionWrapper OptionWithText(this IWebElement dropDownList, [NotNull] string text)
 		{
 			const string optionWithText = "option with visible text '{0}'";
-			return new OptionWrapper(dropDownList.Option(Find.ByText(text)), String.Format(optionWithText, text), dropDownList);
+			var options = dropDownList.FindElements(By.TagName("option"));
+			var option = options.FirstOrDefault(x => x.Text == text);
+			return new OptionWrapper(option, String.Format(optionWithText, text), dropDownList);
 		}
 
-		public static OptionWrapper OptionWithValue(this SelectList dropDownList, [NotNull] string value)
+		public static OptionWrapper OptionWithValue(this IWebElement dropDownList, [NotNull] string value)
 		{
 			const string optionWithValue = "option with value '{0}'";
-			var option = dropDownList.Option(Find.ByValue(value));
+			var options = dropDownList.FindElements(By.TagName("option"));
+			var option = options.FirstOrDefault(x => x.GetAttribute("value") == value);
 			return new OptionWrapper(option, String.Format(optionWithValue, value), dropDownList);
 		}
 	}

@@ -1,12 +1,12 @@
-using WatiN.Core;
+using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Accessors
 {
 	public class EditableText : TextBase
 	{
-		private readonly TextField _textField;
+		private readonly IWebElement _textField;
 
-		public EditableText(TextField textField, string howFound, string text)
+		public EditableText(IWebElement textField, string howFound, string text)
 			: base(text, howFound)
 		{
 			_textField = textField;
@@ -14,7 +14,8 @@ namespace FluentWebUITesting.Accessors
 
 		public void SetValueTo(string text)
 		{
-			_textField.Value = text;
+			_textField.Clear();
+			_textField.SendKeys(text);
 		}
 	}
 }

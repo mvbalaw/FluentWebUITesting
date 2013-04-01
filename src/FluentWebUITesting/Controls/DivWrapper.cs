@@ -1,22 +1,26 @@
 using FluentWebUITesting.Accessors;
 
-using WatiN.Core;
+using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Controls
 {
 	public class DivWrapper : ControlWrapperBase
 	{
-		private readonly Div _div;
+		private readonly IWebElement _div;
 
-		public DivWrapper(Div div, string howFound)
+		public DivWrapper(IWebElement div, string howFound)
 			: base(howFound)
 		{
 			_div = div;
 		}
 
-		protected override Element Element
+		public override IWebElement Element
 		{
 			get { return _div; }
+		}
+		protected override bool ElementExists
+		{
+			get { return _div != null; }
 		}
 
 		public ReadOnlyText Text()

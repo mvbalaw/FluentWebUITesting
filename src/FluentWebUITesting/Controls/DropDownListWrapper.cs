@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,33 +5,43 @@ using FluentWebUITesting.Extensions;
 
 using JetBrains.Annotations;
 
-using WatiN.Core;
+using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Controls
 {
 	public class DropDownListWrapper : ControlWrapperBase
 	{
-		private readonly SelectList _dropDownList;
+		private readonly IWebElement _dropDownList;
 
-		public DropDownListWrapper(SelectList dropDownList, string howFound)
+		public DropDownListWrapper(IWebElement dropDownList, string howFound)
 			: base(howFound)
 		{
 			_dropDownList = dropDownList;
 		}
 
-		protected override Element Element
+		public override IWebElement Element
 		{
 			get { return _dropDownList; }
 		}
 
+		protected override bool ElementExists
+		{
+			get { return _dropDownList != null; }
+		}
+		public IEnumerable<OptionWrapper> Options
+		{
+			get { return _dropDownList.FindElements(By.TagName("option")).Select(x => new OptionWrapper(x, "", _dropDownList)); }
+		}
+
 		public string GetSelectedText()
 		{
-			return _dropDownList.SelectedOption.Text;
+			var selectedOption = _dropDownList.FindElements(By.TagName("option")).FirstOrDefault(x => x.Selected);
+			return selectedOption == null ? "" : selectedOption.Text;
 		}
 
 		public IEnumerable<string> GetSelectedTexts()
 		{
-			return ((IEnumerable<Option>)_dropDownList.SelectedOptions).Select(x => x.Text);
+			return _dropDownList.FindElements(By.TagName("option")).Where(x => x.Selected).Select(x => x.Text);
 		}
 
 		public OptionWrapper OptionWithText([NotNull] string text)
@@ -47,20 +56,6 @@ namespace FluentWebUITesting.Controls
 			Verify();
 			var option = _dropDownList.OptionWithValue(text);
 			return option;
-		}
-
-		[Obsolete("Use .OptionWithText(text).Select()")]
-		public WaitWrapper SelectOptionWithText([NotNull] string text)
-		{
-			var option = OptionWithText(text);
-			return option.Select();
-		}
-
-		[Obsolete("Use .OptionWithValue(text).Select()")]
-		public WaitWrapper SelectOptionWithValue([NotNull] string text)
-		{
-			var option = OptionWithValue(text);
-			return option.Select();
 		}
 
 		private void Verify()

@@ -1,27 +1,32 @@
 using System;
 
-using WatiN.Core;
+using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Controls
 {
 	public class TableRowWrapper : ControlWrapperBase
 	{
-		private readonly TableRow _tableRow;
+		private readonly IWebElement _tableRow;
 
-		public TableRowWrapper(TableRow tableRow, string howFound)
+		public TableRowWrapper(IWebElement tableRow, string howFound)
 			: base(howFound)
 		{
 			_tableRow = tableRow;
 		}
 
-		protected override Element Element
+		public override IWebElement Element
 		{
 			get { return _tableRow; }
+		}
+		protected override bool ElementExists
+		{
+			get { return _tableRow != null; }
 		}
 
 		public TableCellWrapper CellWithIndex(int index)
 		{
-			var cell = _tableRow.TableCell(Find.ByIndex(index));
+			var elements = _tableRow.FindElements(By.TagName("td"));
+			var cell = elements.Count > index ? elements[index] : null;
 			var tableCellWrapper = new TableCellWrapper(cell, String.Format("{0}, table cell with index {1}", HowFound, index));
 			tableCellWrapper.Exists().ShouldBeTrue();
 			return tableCellWrapper;
@@ -30,22 +35,28 @@ namespace FluentWebUITesting.Controls
 
 	public class TableHeaderRowWrapper : ControlWrapperBase
 	{
-		private readonly TableRow _tableRow;
+		private readonly IWebElement _tableRow;
 
-		public TableHeaderRowWrapper(TableRow tableRow, string howFound)
+		public TableHeaderRowWrapper(IWebElement tableRow, string howFound)
 			: base(howFound)
 		{
 			_tableRow = tableRow;
 		}
 
-		protected override Element Element
+		public override IWebElement Element
 		{
 			get { return _tableRow; }
+		}
+		protected override bool ElementExists
+		{
+			get { return _tableRow != null; }
 		}
 
 		public TableHeaderCellWrapper CellWithIndex(int index)
 		{
-			return new TableHeaderCellWrapper(_tableRow.ElementsWithTag("th")[index], String.Format("{0}, table header cell with index {1}", HowFound, index));
+			var elements = _tableRow.FindElements(By.TagName("th"));
+			var cell = elements.Count > index ? elements[index] : null;
+			return new TableHeaderCellWrapper(cell, String.Format("{0}, table header cell with index {1}", HowFound, index));
 		}
 	}
 }

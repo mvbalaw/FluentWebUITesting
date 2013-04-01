@@ -10,7 +10,7 @@ require 'zip/zipfilesystem'
 RESULTS_DIR = "results"
 BUILD_NUMBER = "0.1.0."
 PRODUCT = "FluentWebUITesting"
-COPYRIGHT = 'Copyright 2009 McCreary, Veselka, Bragg & Allen, P.C. All rights reserved.';
+COPYRIGHT = 'Copyright 2009-2013 McCreary, Veselka, Bragg & Allen, P.C. All rights reserved.';
 COMMON_ASSEMBLY_INFO = 'src/CommonAssemblyInfo.cs';
 CLR_VERSION = "v4.0.30319"
 
@@ -62,7 +62,7 @@ task :compile => [:clean, :version] do
     
   outDir = "src/FluentWebUITesting/bin/#{COMPILE_TARGET}"
     
-  Dir.glob(File.join(outDir, "*.{dll,pdb}")){|file| 		
+  Dir.glob(File.join(outDir, "*.{dll,pdb,exe}")){|file| 		
 	copy(file, props[:archive]) if File.file?(file)
   }
 end

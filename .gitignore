@@ -8,3 +8,4 @@ _ReSharper.*/
 *.user
 dist
 CommonAssemblyInfo.cs
+dist.bat

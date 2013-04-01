@@ -1,15 +1,18 @@
 ﻿using System;
-using WatiN.Core;
-using WatiN.Core.DialogHandlers;
+using System.Linq;
+
+using FluentWebUITesting.Extensions;
+
+using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Controls
 {
 	public class DialogHandlerWrapper
 	{
 		private readonly Action _action;
-		private readonly Browser _browser;
+		private readonly IWebDriver _browser;
 
-		public DialogHandlerWrapper(Browser browser, Action action)
+		public DialogHandlerWrapper(IWebDriver browser, Action action)
 		{
 			_browser = browser;
 			_action = action;
@@ -17,25 +20,35 @@ namespace FluentWebUITesting.Controls
 
 		public void ClickCancel()
 		{
-			var handler = new ConfirmDialogHandler();
-			using (new UseDialogOnce(_browser.DialogWatcher, handler))
+			var parentHandle = _browser.CurrentWindowHandle;
+
+			try
 			{
+				var handles = _browser.WindowHandles.Except(new[] { parentHandle });
+				_browser.SwitchTo().Window(handles.Last());
 				_action();
-				handler.WaitUntilExists();
-				handler.CancelButton.Click();
-				_browser.WaitForComplete();
+				_browser.ButtonWithVisibleText("Cancel").Click();
+			}
+			finally
+			{
+				_browser.SwitchTo().Window(parentHandle);
 			}
 		}
 
 		public void ClickOk()
 		{
-			var handler = new ConfirmDialogHandler();
-			using (new UseDialogOnce(_browser.DialogWatcher, handler))
+			var parentHandle = _browser.CurrentWindowHandle;
+
+			try
 			{
+				var handles = _browser.WindowHandles.Except(new[] { parentHandle });
+				_browser.SwitchTo().Window(handles.Last());
 				_action();
-				handler.WaitUntilExists();
-				handler.OKButton.Click();
-				_browser.WaitForComplete();
+				_browser.ButtonWithVisibleText("OK").Click();
+			}
+			finally
+			{
+				_browser.SwitchTo().Window(parentHandle);
 			}
 		}
 	}

@@ -2,49 +2,49 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using WatiN.Core;
+using FluentWebUITesting.Extensions;
+
+using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Controls
 {
 	public class TableWrapper : ControlWrapperBase
 	{
-		private readonly Table _table;
+		private readonly IWebElement _table;
 
-		public TableWrapper(Table table, string howFound)
+		public TableWrapper(IWebElement table, string howFound)
 			: base(howFound)
 		{
 			_table = table;
 		}
 
-		protected override Element Element
+		public override IWebElement Element
 		{
 			get { return _table; }
 		}
-
-		private IEnumerable<TableRow> GetBodyRows()
+		protected override bool ElementExists
 		{
-			var tableBody = _table.TableBodies.FirstOrDefault();
-
-			if (tableBody != null)
-			{
-				return tableBody.TableRows;
-			}
-			return _table.TableRows
-				.Except(GetHeaderRows().Concat(GetFooterRows()));
+			get { return _table != null; }
 		}
 
-		private IEnumerable<TableRow> GetFooterRows()
+		private IEnumerable<IWebElement> GetBodyRows()
 		{
-			var rows = _table.OwnTableRows;
-			var footerRows = rows.Filter(TableRow.IsFooterRow());
+			return _table.FindElements(By.TagName("tr"))
+			             .Except(GetHeaderRows().Concat(GetFooterRows()));
+		}
+
+		private IEnumerable<IWebElement> GetFooterRows()
+		{
+			var rows = _table.FindElements(By.TagName("tr"));
+			var footerRows = rows.Where(x => String.Compare(x.GetParent().TagName, "tfoot", true) == 0);
 			return footerRows;
 		}
 
-		private IEnumerable<TableRow> GetHeaderRows()
+		private IEnumerable<IWebElement> GetHeaderRows()
 		{
-			var rows = _table.OwnTableRows;
-			var theadHeaderRows = rows.Filter(Find.ByElement(element => String.Compare(element.Parent.TagName, "thead", true) == 0));
-			var inlineHeaderRows = rows.Filter(Find.ByElement(e => e.NativeElement.Children.GetElementsByTag("th").Any()));
+			var rows = _table.FindElements(By.TagName("tr"));
+			var theadHeaderRows = rows.Where(x => String.Compare(x.GetParent().TagName, "thead", true) == 0);
+			var inlineHeaderRows = rows.Where(x => x.FindElements(By.TagName("tr")).Any());
 			return theadHeaderRows.Union(inlineHeaderRows);
 		}
 

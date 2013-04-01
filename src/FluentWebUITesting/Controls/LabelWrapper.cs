@@ -1,22 +1,31 @@
 using FluentWebUITesting.Accessors;
 
-using WatiN.Core;
+using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Controls
 {
 	public class LabelWrapper : ControlWrapperBase
 	{
-		private readonly Label _label;
+		private readonly IWebElement _label;
 
-		public LabelWrapper(Label label, string howFound)
+		public LabelWrapper(IWebElement label, string howFound)
 			: base(howFound)
 		{
 			_label = label;
 		}
 
-		protected override Element Element
+		public override IWebElement Element
 		{
 			get { return _label; }
+		}
+		protected override bool ElementExists
+		{
+			get { return _label != null; }
+		}
+
+		public string For
+		{
+			get { return _label.GetAttribute("for"); }
 		}
 
 		public ReadOnlyText Text()

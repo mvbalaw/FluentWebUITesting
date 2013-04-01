@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using WatiN.Core;
+
+using OpenQA.Selenium;
 
 namespace FluentWebUITesting
 {
 	public interface IBrowserProxy
 	{
-		void Do(Action<Browser> action);
+		void Do(Action<IWebDriver> action);
 	}
 
 	public class TestRunner : IBrowserProxy
@@ -21,6 +22,12 @@ namespace FluentWebUITesting
 		{
 			_browserProvider = browserProvider;
 			_browserSetUp = browserSetUp;
+		}
+
+		public void Do(Action<IWebDriver> action)
+		{
+			var browser = _browserProvider.GetOpenOrNewBrowsers().First();
+			Do(action, browser);
 		}
 
 		private void CloseBrowserAfterTest()
@@ -48,7 +55,13 @@ namespace FluentWebUITesting
 			_monitor.Set();
 		}
 
-		public Notification PassesTest(IEnumerable<Action<Browser>> testSteps)
+		private static void Do(Action<IWebDriver> action, IWebDriver browser)
+		{
+			action(browser);
+			//browser.WaitForComplete();
+		}
+
+		public Notification PassesTest(IEnumerable<Action<IWebDriver>> testSteps)
 		{
 			_monitor.Reset();
 
@@ -65,7 +78,7 @@ namespace FluentWebUITesting
 
 		private void RunTest(object steps, out Notification notification)
 		{
-			var testSteps = (IEnumerable<Action<Browser>>) steps;
+			var testSteps = (IEnumerable<Action<IWebDriver>>)steps;
 			try
 			{
 				foreach (var browser in _browserProvider.GetOpenOrNewBrowsers())
@@ -80,11 +93,11 @@ namespace FluentWebUITesting
 					catch (Exception exception)
 					{
 						notification = new Notification
-						               	{
-						               		Success = false,
-						               		Message = exception.Message,
-						               		BrowserType = browser.GetType().Name
-						               	};
+							               {
+								               Success = false,
+								               Message = exception.Message,
+								               BrowserType = browser.GetType().Name
+							               };
 						CloseBrowserAfterTest();
 						_monitor.Set();
 						return;
@@ -94,31 +107,19 @@ namespace FluentWebUITesting
 			catch (Exception exception)
 			{
 				notification = new Notification
-				               	{
-				               		Success = false,
-				               		Message = "While getting browser: " + exception.Message
-				               	};
+					               {
+						               Success = false,
+						               Message = "While getting browser: " + exception.Message
+					               };
 				_monitor.Set();
 				return;
 			}
 			notification = new Notification
-			               	{
-			               		Success = true
-			               	};
+				               {
+					               Success = true
+				               };
 			CloseBrowserAfterTest();
 			_monitor.Set();
-		}
-
-		public void Do(Action<Browser> action)
-		{
-			var browser = _browserProvider.GetOpenOrNewBrowsers().First();
-			Do(action, browser);
-		}
-
-		private static void Do(Action<Browser> action, Browser browser)
-		{
-			action(browser);
-			browser.WaitForComplete();
 		}
 	}
 }

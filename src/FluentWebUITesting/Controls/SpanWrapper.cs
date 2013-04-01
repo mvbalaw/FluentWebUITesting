@@ -1,22 +1,26 @@
 using FluentWebUITesting.Accessors;
 
-using WatiN.Core;
+using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Controls
 {
 	public class SpanWrapper : ControlWrapperBase
 	{
-		private readonly Span _span;
+		private readonly IWebElement _span;
 
-		public SpanWrapper(Span span, string howFound)
+		public SpanWrapper(IWebElement span, string howFound)
 			: base(howFound)
 		{
 			_span = span;
 		}
 
-		protected override Element Element
+		public override IWebElement Element
 		{
 			get { return _span; }
+		}
+		protected override bool ElementExists
+		{
+			get { return _span != null; }
 		}
 
 		public ReadOnlyText Text()

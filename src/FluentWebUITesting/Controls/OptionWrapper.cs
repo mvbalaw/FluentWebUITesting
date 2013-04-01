@@ -1,30 +1,36 @@
 using FluentWebUITesting.Accessors;
 
-using WatiN.Core;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 
 namespace FluentWebUITesting.Controls
 {
 	public class OptionWrapper : ControlWrapperBase
 	{
-		private readonly Option _option;
-		private readonly SelectList _parentDropDown;
+		private readonly IWebElement _option;
+		private readonly IWebElement _parentDropDown;
 
-		public OptionWrapper(Option option, string howFound, SelectList parentDropDown)
+		public OptionWrapper(IWebElement option, string howFound, IWebElement parentDropDown)
 			: base(howFound)
 		{
 			_option = option;
 			_parentDropDown = parentDropDown;
 		}
 
-		protected override Element Element
+		public override IWebElement Element
 		{
 			get { return _option; }
+		}
+		protected override bool ElementExists
+		{
+			get { return _option != null; }
 		}
 
 		public WaitWrapper Select()
 		{
 			Exists().ShouldBeTrue();
-			_parentDropDown.Select(Text().GetValue());
+			var select = new SelectElement(_parentDropDown);
+			select.SelectByText(Text().GetValue());
 			return new WaitWrapper();
 		}
 
@@ -35,7 +41,7 @@ namespace FluentWebUITesting.Controls
 
 		public ReadOnlyText Value()
 		{
-			return new ReadOnlyText("value of " + HowFound, _option.Value);
+			return new ReadOnlyText("value of " + HowFound, _option.GetAttribute("value"));
 		}
 	}
 }

@@ -55,10 +55,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\FluentAssert\FluentAssert.dll</HintPath>
     </Reference>
-    <Reference Include="Interop.SHDocVw, Version=1.1.0.0, Culture=neutral, PublicKeyToken=db7cfd3acb5ad44e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\WatiN\Interop.SHDocVw.dll</HintPath>
-    </Reference>
     <Reference Include="JetBrains.Annotations, Version=4.5.1230.4, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\JetBrains.Annotations\JetBrains.Annotations.dll</HintPath>
@@ -75,9 +71,11 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WatiN.Core, Version=2.0.50.1179, Culture=neutral, PublicKeyToken=db7cfd3acb5ad44e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\WatiN\WatiN.Core.dll</HintPath>
+    <Reference Include="WebDriver">
+      <HintPath>..\..\lib\WebDriver\net40\WebDriver.dll</HintPath>
+    </Reference>
+    <Reference Include="WebDriver.Support">
+      <HintPath>..\..\lib\WebDriver\net40\WebDriver.Support.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -93,7 +91,6 @@
     <Compile Include="Controls\DialogHandlerWrapper.cs" />
     <Compile Include="Controls\DivWrapper.cs" />
     <Compile Include="Controls\DropDownListWrapper.cs" />
-    <Compile Include="Controls\FileDownloadHandlerWrapper.cs" />
     <Compile Include="Controls\LabelWrapper.cs" />
     <Compile Include="Controls\LinkWrapper.cs" />
     <Compile Include="Controls\OptionWrapper.cs" />
@@ -108,6 +105,7 @@
     <Compile Include="Extensions\BrowserExtensions.cs" />
     <Compile Include="Extensions\ControlWrapperExtensions.cs" />
     <Compile Include="Extensions\ISelectListExtensions.cs" />
+    <Compile Include="Extensions\IWebElementExtensions.cs" />
     <Compile Include="Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestRunner.cs" />
@@ -131,6 +129,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if not exist "$(TargetDir)\chromedriver.exe" goto cp
+   del /F "$(TargetDir)\chromedriver.exe"
+:cp
+if exist "$(TargetDir)\chromedriver.exe" goto end
+copy /Y "$(ProjectDir)..\..\lib\WebDriver\chromedriver.exe"  "$(TargetDir)"
+:end</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

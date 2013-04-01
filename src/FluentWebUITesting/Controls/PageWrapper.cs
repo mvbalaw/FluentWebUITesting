@@ -1,21 +1,21 @@
 using FluentWebUITesting.Accessors;
 
-using WatiN.Core;
+using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Controls
 {
 	public class PageWrapper
 	{
-		private readonly Browser _browser;
+		private readonly IWebDriver _browser;
 
-		public PageWrapper(Browser browser)
+		public PageWrapper(IWebDriver browser)
 		{
 			_browser = browser;
 		}
 
 		public ReadOnlyText Text()
 		{
-			return new ReadOnlyText("Page", _browser.Text);
+			return new ReadOnlyText("Page", _browser.PageSource);
 		}
 	}
 }
