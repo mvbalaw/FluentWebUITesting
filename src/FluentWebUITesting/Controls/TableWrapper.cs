@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 using FluentWebUITesting.Extensions;
@@ -27,30 +28,28 @@ namespace FluentWebUITesting.Controls
 			get { return _table != null; }
 		}
 
-		private IEnumerable<IWebElement> GetBodyRows()
+		private static IEnumerable<IWebElement> GetBodyRows(ReadOnlyCollection<IWebElement> allRows)
 		{
-			return _table.FindElements(By.TagName("tr"))
-			             .Except(GetHeaderRows().Concat(GetFooterRows()));
+			return allRows.Except(GetHeaderRows(allRows).Concat(GetFooterRows(allRows)));
 		}
 
-		private IEnumerable<IWebElement> GetFooterRows()
+		private static IEnumerable<IWebElement> GetFooterRows(IEnumerable<IWebElement> allRows)
 		{
-			var rows = _table.FindElements(By.TagName("tr"));
-			var footerRows = rows.Where(x => String.Compare(x.GetParent().TagName, "tfoot", true) == 0);
+			var footerRows = allRows.Where(x => String.Compare(x.GetParent().TagName, "tfoot", true) == 0);
 			return footerRows;
 		}
 
-		private IEnumerable<IWebElement> GetHeaderRows()
+		private static IEnumerable<IWebElement> GetHeaderRows(ReadOnlyCollection<IWebElement> allRows)
 		{
-			var rows = _table.FindElements(By.TagName("tr"));
-			var theadHeaderRows = rows.Where(x => String.Compare(x.GetParent().TagName, "thead", true) == 0);
-			var inlineHeaderRows = rows.Where(x => x.FindElements(By.TagName("tr")).Any());
+			var theadHeaderRows = allRows.Where(x => String.Compare(x.GetParent().TagName, "thead", true) == 0);
+			var inlineHeaderRows = allRows.Where(x => x.FindElements(By.TagName("th")).Any());
 			return theadHeaderRows.Union(inlineHeaderRows);
 		}
 
 		public IEnumerable<TableHeaderRowWrapper> Headers()
 		{
-			var headers = GetHeaderRows()
+			var allRows = _table.FindElements(By.TagName("tr"));
+			var headers = GetHeaderRows(allRows)
 				.Select((x, i) =>
 				        new TableHeaderRowWrapper(x, String.Format("{0}, header row with index {1}", HowFound, i)));
 			return headers;
@@ -58,7 +57,8 @@ namespace FluentWebUITesting.Controls
 
 		public IEnumerable<TableRowWrapper> Rows()
 		{
-			var rows = GetBodyRows()
+			var allRows = _table.FindElements(By.TagName("tr"));
+			var rows = GetBodyRows(allRows)
 				.Select((x, i) =>
 				        new TableRowWrapper(x, String.Format("{0}, row with index {1}", HowFound, i)));
 
