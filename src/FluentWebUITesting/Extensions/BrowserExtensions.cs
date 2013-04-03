@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Web;
 
 using FluentWebUITesting.Accessors;
 using FluentWebUITesting.Controls;
@@ -164,8 +165,13 @@ namespace FluentWebUITesting.Extensions
 
 		public static LinkWrapper LinkWithVisibleText(this IWebDriver browser, [NotNull] string text)
 		{
+			var htmlEscapedText = HttpUtility.HtmlEncode(text);
 			const string howFound = "link with visible text '{0}'";
-			var link = browser.FindElements(By.LinkText(text)).FirstOrDefault();
+			var link = browser.FindElements(By.LinkText(text)).FirstOrDefault() ?? browser.GetElementsByTagType("a").FirstOrDefault(x =>
+				{
+					var attribute = x.GetAttribute("innerHTML");
+					return attribute == htmlEscapedText;
+				});
 			return new LinkWrapper(link, String.Format(howFound, text), browser);
 		}
 
