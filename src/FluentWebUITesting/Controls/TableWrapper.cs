@@ -11,21 +11,9 @@ namespace FluentWebUITesting.Controls
 {
 	public class TableWrapper : ControlWrapperBase
 	{
-		private readonly IWebElement _table;
-
-		public TableWrapper(IWebElement table, string howFound)
-			: base(howFound)
+		public TableWrapper(IWebElement table, string howFound, IWebDriver browser)
+			: base(table, howFound, browser)
 		{
-			_table = table;
-		}
-
-		public override IWebElement Element
-		{
-			get { return _table; }
-		}
-		protected override bool ElementExists
-		{
-			get { return _table != null; }
 		}
 
 		private static IEnumerable<IWebElement> GetBodyRows(ReadOnlyCollection<IWebElement> allRows)
@@ -48,19 +36,19 @@ namespace FluentWebUITesting.Controls
 
 		public IEnumerable<TableHeaderRowWrapper> Headers()
 		{
-			var allRows = _table.FindElements(By.TagName("tr"));
+			var allRows = Element.FindElements(By.TagName("tr"));
 			var headers = GetHeaderRows(allRows)
 				.Select((x, i) =>
-				        new TableHeaderRowWrapper(x, String.Format("{0}, header row with index {1}", HowFound, i)));
+				        new TableHeaderRowWrapper(x, String.Format("{0}, header row with index {1}", HowFound, i), Browser));
 			return headers;
 		}
 
 		public IEnumerable<TableRowWrapper> Rows()
 		{
-			var allRows = _table.FindElements(By.TagName("tr"));
+			var allRows = Element.FindElements(By.TagName("tr"));
 			var rows = GetBodyRows(allRows)
 				.Select((x, i) =>
-				        new TableRowWrapper(x, String.Format("{0}, row with index {1}", HowFound, i)));
+				        new TableRowWrapper(x, String.Format("{0}, row with index {1}", HowFound, i), Browser));
 
 			return rows;
 		}

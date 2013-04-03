@@ -11,50 +11,38 @@ namespace FluentWebUITesting.Controls
 {
 	public class DropDownListWrapper : ControlWrapperBase
 	{
-		private readonly IWebElement _dropDownList;
-
-		public DropDownListWrapper(IWebElement dropDownList, string howFound)
-			: base(howFound)
+		public DropDownListWrapper(IWebElement dropDownList, string howFound, IWebDriver browser)
+			: base(dropDownList, howFound, browser)
 		{
-			_dropDownList = dropDownList;
 		}
 
-		public override IWebElement Element
-		{
-			get { return _dropDownList; }
-		}
-
-		protected override bool ElementExists
-		{
-			get { return _dropDownList != null; }
-		}
 		public IEnumerable<OptionWrapper> Options
 		{
-			get { return _dropDownList.FindElements(By.TagName("option")).Select(x => new OptionWrapper(x, "", _dropDownList)); }
+			get { return Element.FindElements(By.TagName("option")).Select(x => new OptionWrapper(x, "", Element, Browser)); }
 		}
 
 		public string GetSelectedText()
 		{
-			var selectedOption = _dropDownList.FindElements(By.TagName("option")).FirstOrDefault(x => x.Selected);
+			var selectedOption = Element.FindElements(By.TagName("option")).FirstOrDefault(x => x.Selected);
 			return selectedOption == null ? "" : selectedOption.Text;
 		}
 
 		public IEnumerable<string> GetSelectedTexts()
 		{
-			return _dropDownList.FindElements(By.TagName("option")).Where(x => x.Selected).Select(x => x.Text);
+			return Element.FindElements(By.TagName("option")).Where(x => x.Selected).Select(x => x.Text);
 		}
 
 		public OptionWrapper OptionWithText([NotNull] string text)
 		{
 			Verify();
-			var option = _dropDownList.OptionWithText(text);
+			var option = Element.OptionWithText(text, Browser);
 			return option;
 		}
 
 		public OptionWrapper OptionWithValue([NotNull] string text)
 		{
 			Verify();
-			var option = _dropDownList.OptionWithValue(text);
+			var option = Element.OptionWithValue(text, Browser);
 			return option;
 		}
 

@@ -4,33 +4,19 @@ using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Controls
 {
-	public class ButtonWrapper : ControlWrapperBase
+	public class ButtonWrapper : ControlWrapperBase, INavigationControl
 	{
-		private readonly IWebDriver _browser;
-		private readonly IWebElement _button;
-
 		public ButtonWrapper(IWebElement button, string howFound, IWebDriver browser)
-			: base(howFound)
+			: base(button, howFound, browser)
 		{
-			_button = button;
-			_browser = browser;
-		}
-
-		public override IWebElement Element
-		{
-			get { return _button; }
-		}
-		protected override bool ElementExists
-		{
-			get { return _button != null; }
 		}
 
 		public WaitWrapper Click()
 		{
 			Exists().ShouldBeTrue();
 			Enabled().ShouldBeTrue();
-			_browser.Focus(_button);
-			_button.Click();
+			Browser.Focus(Element);
+			Element.Click();
 			return new WaitWrapper();
 		}
 
@@ -38,8 +24,8 @@ namespace FluentWebUITesting.Controls
 		{
 			Exists().ShouldBeTrue();
 			Enabled().ShouldBeTrue();
-			_browser.Focus(_button);
-			_button.Click();
+			Browser.Focus(Element);
+			Element.Click();
 		}
 	}
 }

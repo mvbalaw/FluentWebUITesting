@@ -6,26 +6,14 @@ namespace FluentWebUITesting.Controls
 {
 	public class DivWrapper : ControlWrapperBase
 	{
-		private readonly IWebElement _div;
-
-		public DivWrapper(IWebElement div, string howFound)
-			: base(howFound)
+		public DivWrapper(IWebElement div, string howFound, IWebDriver browser)
+			: base(div, howFound, browser)
 		{
-			_div = div;
-		}
-
-		public override IWebElement Element
-		{
-			get { return _div; }
-		}
-		protected override bool ElementExists
-		{
-			get { return _div != null; }
 		}
 
 		public ReadOnlyText Text()
 		{
-			return new ReadOnlyText(HowFound, _div.Text);
+			return new ReadOnlyText(HowFound, Element.Text);
 		}
 	}
 }

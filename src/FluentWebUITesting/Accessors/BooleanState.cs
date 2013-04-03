@@ -9,8 +9,6 @@ namespace FluentWebUITesting.Accessors
 	public interface IReadOnlyBooleanState
 	{
 		bool IsTrue { get; }
-		[Obsolete("Use IsTrue")]
-		bool Passed { get; }
 		void ShouldBeFalse();
 		void ShouldBeFalse(string errorMessage);
 		void ShouldBeTrue();
@@ -38,11 +36,6 @@ namespace FluentWebUITesting.Accessors
 			_setState = setState;
 		}
 
-		[Obsolete("Use IsTrue")]
-		public bool Passed
-		{
-			get { return IsTrue; }
-		}
 		public bool IsTrue
 		{
 			get { return _getState(); }
@@ -68,7 +61,12 @@ namespace FluentWebUITesting.Accessors
 			IsTrue.ShouldBeTrue(errorMessage);
 		}
 
+		[Obsolete("use SetValueTo(bool)")]
 		public WaitWrapper SetValue(bool state)
+		{
+			return SetValueTo(state);
+		}
+		public WaitWrapper SetValueTo(bool state)
 		{
 			_setState(state);
 			return new WaitWrapper();

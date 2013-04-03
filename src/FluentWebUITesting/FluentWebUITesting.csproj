@@ -91,6 +91,8 @@
     <Compile Include="Controls\DialogHandlerWrapper.cs" />
     <Compile Include="Controls\DivWrapper.cs" />
     <Compile Include="Controls\DropDownListWrapper.cs" />
+    <Compile Include="Controls\IFieldControl.cs" />
+    <Compile Include="Controls\INavigationControl.cs" />
     <Compile Include="Controls\LabelWrapper.cs" />
     <Compile Include="Controls\LinkWrapper.cs" />
     <Compile Include="Controls\OptionWrapper.cs" />

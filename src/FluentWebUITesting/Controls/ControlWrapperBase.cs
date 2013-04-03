@@ -8,16 +8,25 @@ using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Controls
 {
-	public abstract class ControlWrapperBase
+	public class ControlWrapperBase : IFieldControl
 	{
-		protected ControlWrapperBase(string howFound)
+//// ReSharper disable MemberCanBeProtected.Global
+		public ControlWrapperBase(IWebElement element, string howFound, IWebDriver browser)
+//// ReSharper restore MemberCanBeProtected.Global
 		{
+			Element = element;
 			HowFound = howFound;
+			Browser = browser;
 		}
 
-		public abstract IWebElement Element { get; }
-		protected abstract bool ElementExists { get; }
-		protected string HowFound { get; private set; }
+		public IWebDriver Browser { get; private set; }
+
+		public IWebElement Element { get; private set; }
+		private bool ElementExists
+		{
+			get { return Element != null; }
+		}
+		public string HowFound { get; private set; }
 		public string Id
 		{
 			get { return Element.GetAttribute("id"); }
@@ -31,7 +40,9 @@ namespace FluentWebUITesting.Controls
 			}
 		}
 
+//// ReSharper disable MemberCanBeProtected.Global
 		public IReadOnlyBooleanState Enabled()
+//// ReSharper restore MemberCanBeProtected.Global
 		{
 			const string unexpectedlyFalse = "{0} is not enabled but should be.";
 			const string unexpectedlyTrue = "{0} is enabled but should not be.";
@@ -76,6 +87,65 @@ namespace FluentWebUITesting.Controls
 				return new KeyValuePair<bool, string>(false, element.TagName + "." + result.Value);
 			}
 			return new KeyValuePair<bool, string>(true, null);
+		}
+
+		public CheckBoxWrapper ToCheckBoxWrapper()
+		{
+			var elem = Element;
+			if (elem != null)
+			{
+				if (String.Compare(elem.TagName, "input", true) != 0 ||
+				    String.Compare(elem.GetAttribute("type"), "checkbox", true) != 0)
+				{
+					elem = null;
+				}
+			}
+
+			return new CheckBoxWrapper(elem, HowFound, Browser);
+		}
+
+		public DropDownListWrapper ToDropDownListWrapper()
+		{
+			var elem = Element;
+			if (elem != null)
+			{
+				if (String.Compare(elem.TagName, "select", true) != 0)
+				{
+					elem = null;
+				}
+			}
+			return new DropDownListWrapper(elem, HowFound, Browser);
+		}
+
+		public RadioButtonOptionWrapper ToRadioButtonOptionWrapper()
+		{
+			var elem = Element;
+			if (elem != null)
+			{
+				if (String.Compare(elem.TagName, "input", true) != 0 ||
+				    String.Compare(elem.GetAttribute("type"), "radio", true) != 0)
+				{
+					elem = null;
+				}
+			}
+
+			return new RadioButtonOptionWrapper(elem, HowFound, Browser);
+		}
+
+		public TextBoxWrapper ToTextBoxWrapper()
+		{
+			var elem = Element;
+			if (elem != null)
+			{
+				if ((String.Compare(elem.TagName, "input", true) != 0 ||
+				     String.Compare(elem.GetAttribute("type"), "text", true) != 0) &&
+				    String.Compare(elem.TagName, "textarea", true) != 0)
+				{
+					elem = null;
+				}
+			}
+
+			return new TextBoxWrapper(elem, HowFound, Browser);
 		}
 
 		public IReadOnlyBooleanState Visible()

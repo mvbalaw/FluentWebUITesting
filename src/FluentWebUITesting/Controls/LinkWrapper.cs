@@ -4,34 +4,28 @@ using OpenQA.Selenium;
 
 namespace FluentWebUITesting.Controls
 {
-	public class LinkWrapper : ControlWrapperBase
+	public class LinkWrapper : ControlWrapperBase, INavigationControl
 	{
-		private readonly IWebDriver _browser;
-		private readonly IWebElement _link;
-
 		public LinkWrapper(IWebElement link, string howFound, IWebDriver browser)
-			: base(howFound)
+			: base(link, howFound, browser)
 		{
-			_link = link;
-			_browser = browser;
-		}
-
-		public override IWebElement Element
-		{
-			get { return _link; }
-		}
-		protected override bool ElementExists
-		{
-			get { return _link != null; }
 		}
 
 		public WaitWrapper Click()
 		{
 			Exists().ShouldBeTrue();
 			Enabled().ShouldBeTrue();
-			_browser.Focus(_link);
-			_link.Click();
+			Browser.Focus(Element);
+			Element.Click();
 			return new WaitWrapper();
+		}
+
+		public void ClickNoWait()
+		{
+			Exists().ShouldBeTrue();
+			Enabled().ShouldBeTrue();
+			Browser.Focus(Element);
+			Element.Click();
 		}
 	}
 }

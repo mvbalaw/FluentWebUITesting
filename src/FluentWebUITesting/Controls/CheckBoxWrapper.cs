@@ -7,29 +7,9 @@ namespace FluentWebUITesting.Controls
 {
 	public class CheckBoxWrapper : ControlWrapperBase
 	{
-		private readonly IWebDriver _browser;
-		private readonly IWebElement _checkBox;
-
 		public CheckBoxWrapper(IWebElement checkBox, string howFound, IWebDriver browser)
-			: base(howFound)
+			: base(checkBox, howFound, browser)
 		{
-			_checkBox = checkBox;
-			_browser = browser;
-		}
-
-		internal CheckBoxWrapper(CheckBoxWrapper checkBox, string howFound)
-			: base(howFound)
-		{
-			_checkBox = checkBox == null ? null : checkBox.Element;
-		}
-
-		public override IWebElement Element
-		{
-			get { return _checkBox; }
-		}
-		protected override bool ElementExists
-		{
-			get { return _checkBox != null; }
 		}
 
 		public BooleanState CheckedState()
@@ -37,11 +17,11 @@ namespace FluentWebUITesting.Controls
 			Exists().ShouldBeTrue();
 			return new BooleanState(HowFound + " should have been checked but was not",
 			                        HowFound + " should not have been checked but was",
-			                        () => _checkBox.Selected,
+									() => Element.Selected,
 			                        value =>
 				                        {
-					                        _browser.Focus(_checkBox);
-					                        _checkBox.Click();
+											Browser.Focus(Element);
+											Element.Click();
 				                        });
 		}
 	}

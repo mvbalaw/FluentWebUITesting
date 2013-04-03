@@ -67,14 +67,14 @@ namespace FluentWebUITesting.Extensions
 		{
 			const string howFound = "div with id '{0}'";
 			var div = browser.TryGetElementByIdAndTagType(id, "div");
-			return new DivWrapper(div, String.Format(howFound, id));
+			return new DivWrapper(div, String.Format(howFound, id), browser);
 		}
 
 		public static IEnumerable<DivWrapper> Divs(this IWebDriver browser)
 		{
 			const string howFound = "type 'div'";
 			var divs = browser.GetElementsByTagType("div");
-			return divs.Select(x => new DivWrapper(x, howFound));
+			return divs.Select(x => new DivWrapper(x, howFound, browser));
 		}
 
 		public static DropDownListWrapper DropDownListWithId(this IWebDriver browser, [NotNull] string idOfList)
@@ -82,14 +82,15 @@ namespace FluentWebUITesting.Extensions
 			const string howFound = "drop down list with id '{0}'";
 			var dropDownList = browser.TryGetElementByIdAndTagType(idOfList, "select");
 			return new DropDownListWrapper(dropDownList,
-			                               String.Format(howFound, idOfList));
+										   String.Format(howFound, idOfList), 
+										   browser);
 		}
 
 		public static IEnumerable<DropDownListWrapper> DropDownLists(this IWebDriver browser)
 		{
 			const string howFound = "type 'select'";
 			var dropDowns = browser.GetElementsByTagType("select");
-			return dropDowns.Select(x => new DropDownListWrapper(x, howFound));
+			return dropDowns.Select(x => new DropDownListWrapper(x, howFound, browser));
 		}
 
 		public static void Focus(this IWebDriver browser, IWebElement element)
@@ -116,14 +117,14 @@ namespace FluentWebUITesting.Extensions
 		{
 			const string howFound = "hidden input with id '{0}'";
 			var hidden = browser.TryGetElementByIdAndInputType(id, "hidden");
-			return new TextBoxWrapper(hidden, String.Format(howFound, id));
+			return new TextBoxWrapper(hidden, String.Format(howFound, id), browser);
 		}
 
 		public static IEnumerable<TextBoxWrapper> Hiddens(this IWebDriver browser)
 		{
 			const string howFound = "type 'hidden'";
 			var hiddens = browser.GetElementsByTagType("input").Where(x => x.GetAttribute("type") == "hidden");
-			return hiddens.Select(x => new TextBoxWrapper(x, howFound));
+			return hiddens.Select(x => new TextBoxWrapper(x, howFound, browser));
 		}
 
 		public static IEnumerable<ButtonWrapper> ImageButtons(this IWebDriver browser)
@@ -144,14 +145,14 @@ namespace FluentWebUITesting.Extensions
 		{
 			const string howFound = "label with id '{0}'";
 			var label = browser.TryGetElementByIdAndTagType(id, "label");
-			return new LabelWrapper(label, String.Format(howFound, id));
+			return new LabelWrapper(label, String.Format(howFound, id), browser);
 		}
 
 		public static IEnumerable<LabelWrapper> Labels(this IWebDriver browser)
 		{
 			const string howFound = "type 'label'";
 			var labels = browser.GetElementsByTagType("label");
-			return labels.Select(x => new LabelWrapper(x, howFound));
+			return labels.Select(x => new LabelWrapper(x, howFound, browser));
 		}
 
 		public static LinkWrapper LinkWithId(this IWebDriver browser, [NotNull] string id)
@@ -200,28 +201,28 @@ namespace FluentWebUITesting.Extensions
 		{
 			const string howFound = "span with id '{0}'";
 			var span = browser.TryGetElementByIdAndTagType(id, "span");
-			return new SpanWrapper(span, String.Format(howFound, id));
+			return new SpanWrapper(span, String.Format(howFound, id), browser);
 		}
 
 		public static IEnumerable<SpanWrapper> Spans(this IWebDriver browser)
 		{
 			const string howFound = "type 'span'";
 			var spans = browser.GetElementsByTagType("span");
-			return spans.Select(x => new SpanWrapper(x, howFound));
+			return spans.Select(x => new SpanWrapper(x, howFound, browser));
 		}
 
 		public static TableWrapper TableWithId(this IWebDriver browser, [NotNull] string id)
 		{
 			const string howFound = "table with id '{0}'";
 			var table = browser.TryGetElementByIdAndTagType(id, "table");
-			return new TableWrapper(table, String.Format(howFound, id));
+			return new TableWrapper(table, String.Format(howFound, id), browser);
 		}
 
 		public static IEnumerable<TableWrapper> Tables(this IWebDriver browser)
 		{
 			const string howFound = "type 'table'";
 			var tables = browser.GetElementsByTagType("table");
-			return tables.Select(x => new TableWrapper(x, howFound));
+			return tables.Select(x => new TableWrapper(x, howFound, browser));
 		}
 
 		public static ReadOnlyText Text(this IWebDriver browser)
@@ -232,14 +233,14 @@ namespace FluentWebUITesting.Extensions
 		public static TextBoxWrapper TextBoxWithId(this IWebDriver browser, [NotNull] string id)
 		{
 			const string howFound = "text box with id '{0}'";
-			var textField = browser.TryGetElementByIdAndInputType(id, "text") ?? browser.TryGetElementByIdAndInputType(id, "textarea");
-			return new TextBoxWrapper(textField, String.Format(howFound, id));
+			var textField = browser.TryGetElementByIdAndInputType(id, "text") ?? browser.TryGetElementByIdAndTagType(id, "textarea");
+			return new TextBoxWrapper(textField, String.Format(howFound, id), browser);
 		}
 
 		public static IEnumerable<TextBoxWrapper> TextBoxes(this IWebDriver browser)
 		{
-			var textBoxes = browser.GetInputsByInputType("text").Select(x => new TextBoxWrapper(x, "type 'text'"));
-			var textAreas = browser.GetInputsByInputType("textarea").Select(x => new TextBoxWrapper(x, "type 'textarea'"));
+			var textBoxes = browser.GetInputsByInputType("text").Select(x => new TextBoxWrapper(x, "type 'text'", browser));
+			var textAreas = browser.GetElementsByTagType("textarea").Select(x => new TextBoxWrapper(x, "type 'textarea'", browser));
 			return textBoxes.Concat(textAreas);
 		}
 
