@@ -187,6 +187,28 @@ namespace FluentWebUITesting.Extensions
 			Thread.Sleep(milliseconds);
 		}
 
+		public static void ScrollElementIntoView(this IWebDriver browser, IWebElement e)
+		{
+			var windowSize = browser.Manage().Window.Size;
+
+			var currentScreenLocation = ((ILocatable)browser.SwitchTo().ActiveElement()).LocationOnScreenOnceScrolledIntoView;
+
+			var elementPosition = ((ILocatable)e).LocationOnScreenOnceScrolledIntoView;
+			var offset = windowSize.Height / 4;
+			int yOffset = currentScreenLocation.Y < elementPosition.Y ? offset : -offset;
+			var yPosition = elementPosition.Y + yOffset;
+			if (yPosition < 0)
+			{
+				yPosition = 0;
+			}
+			else if (yPosition > windowSize.Height)
+			{
+				yPosition = windowSize.Height;
+			}
+			var js = String.Format("window.scroll({0}, {1})", elementPosition.X, yPosition);
+			((IJavaScriptExecutor)browser).ExecuteScript(js);
+		}
+
 		public static RadioButtonOptionWrapper RadioButtonOptionWithId(this IWebDriver browser, [NotNull] string idOfOption)
 		{
 			const string howFound = "radio button option with id '{0}'";

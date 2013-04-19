@@ -1,4 +1,5 @@
 using FluentWebUITesting.Accessors;
+using FluentWebUITesting.Extensions;
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -18,6 +19,7 @@ namespace FluentWebUITesting.Controls
 		public WaitWrapper Select()
 		{
 			Exists().ShouldBeTrue();
+			Browser.ScrollElementIntoView(_parentDropDown);
 			var select = new SelectElement(_parentDropDown);
 			select.SelectByText(Text().GetValue());
 			return new WaitWrapper();

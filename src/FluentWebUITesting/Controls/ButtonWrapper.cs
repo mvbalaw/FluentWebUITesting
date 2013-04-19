@@ -15,6 +15,7 @@ namespace FluentWebUITesting.Controls
 		{
 			Exists().ShouldBeTrue();
 			Enabled().ShouldBeTrue();
+			Browser.ScrollElementIntoView(Element);
 			Browser.Focus(Element);
 			Element.Click();
 			return new WaitWrapper();
@@ -24,6 +25,7 @@ namespace FluentWebUITesting.Controls
 		{
 			Exists().ShouldBeTrue();
 			Enabled().ShouldBeTrue();
+			Browser.ScrollElementIntoView(Element);
 			Browser.Focus(Element);
 			Element.Click();
 		}

@@ -20,6 +20,7 @@ namespace FluentWebUITesting.Controls
 									() => Element.Selected,
 			                        value =>
 				                        {
+											Browser.ScrollElementIntoView(Element);
 											Browser.Focus(Element);
 											Element.Click();
 				                        });

@@ -1,3 +1,8 @@
+using System;
+
+using FluentAssert;
+using FluentAssert.Exceptions;
+
 using FluentWebUITesting.Accessors;
 
 using OpenQA.Selenium;
@@ -18,7 +23,16 @@ namespace FluentWebUITesting.Controls
 
 		public ReadOnlyText Text()
 		{
-			return new ReadOnlyText(HowFound, Element.Text);
+			string text = null;
+			try
+			{
+				text = Element.Text;
+			}
+			catch (Exception exception)
+			{
+				throw new Exception("Unable to get label text for " + HowFound+" - this happens when the page content changes dynamically.", exception);
+			}
+			return new ReadOnlyText(HowFound, text);
 		}
 	}
 }

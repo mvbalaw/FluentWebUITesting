@@ -13,7 +13,7 @@ namespace FluentWebUITesting.Controls
 
 		public EditableText Text()
 		{
-			return new EditableText(Element, HowFound, Element.GetAttribute("value"));
+			return new EditableText(Element, HowFound, Element.GetAttribute("value"), Browser);
 		}
 	}
 }
