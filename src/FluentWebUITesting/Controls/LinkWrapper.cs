@@ -1,3 +1,5 @@
+using System;
+
 using FluentWebUITesting.Extensions;
 
 using OpenQA.Selenium;
@@ -13,11 +15,7 @@ namespace FluentWebUITesting.Controls
 
 		public WaitWrapper Click()
 		{
-			Exists().ShouldBeTrue();
-			Enabled().ShouldBeTrue();
-			Browser.ScrollElementIntoView(Element);
-			Browser.Focus(Element);
-			Element.Click();
+			ClickNoWait();
 			return new WaitWrapper();
 		}
 
@@ -25,9 +23,20 @@ namespace FluentWebUITesting.Controls
 		{
 			Exists().ShouldBeTrue();
 			Enabled().ShouldBeTrue();
-			Browser.ScrollElementIntoView(Element);
 			Browser.Focus(Element);
-			Element.Click();
+			try
+			{
+				Element.Click();
+			}
+			catch (InvalidOperationException invalidOperationException)
+			{
+				if (invalidOperationException.Message.Contains("Other element would receive the click"))
+				{
+					Browser.ScrollElementIntoView(Element);
+					Browser.Focus(Element);
+					Element.Click();
+				}
+			}
 		}
 	}
 }

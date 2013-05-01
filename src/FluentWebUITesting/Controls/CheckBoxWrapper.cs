@@ -1,3 +1,5 @@
+using System;
+
 using FluentWebUITesting.Accessors;
 using FluentWebUITesting.Extensions;
 
@@ -20,9 +22,20 @@ namespace FluentWebUITesting.Controls
 									() => Element.Selected,
 			                        value =>
 				                        {
-											Browser.ScrollElementIntoView(Element);
 											Browser.Focus(Element);
-											Element.Click();
+					                        try
+					                        {
+						                        Element.Click();
+					                        }
+											catch (InvalidOperationException invalidOperationException)
+					                        {
+						                        if (invalidOperationException.Message.Contains("Other element would receive the click"))
+						                        {
+													Browser.ScrollElementIntoView(Element);
+													Browser.Focus(Element);
+													Element.Click();
+												}
+					                        }
 				                        });
 		}
 	}
