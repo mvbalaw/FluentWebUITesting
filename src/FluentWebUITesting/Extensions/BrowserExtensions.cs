@@ -170,7 +170,7 @@ namespace FluentWebUITesting.Extensions
 			var link = browser.FindElements(By.LinkText(text)).FirstOrDefault() ?? browser.GetElementsByTagType("a").FirstOrDefault(x =>
 				{
 					var attribute = x.GetAttribute("innerHTML");
-					return attribute == htmlEscapedText;
+					return attribute == htmlEscapedText || attribute == text;
 				});
 			return new LinkWrapper(link, String.Format(howFound, text), browser);
 		}
