@@ -5,6 +5,7 @@ using FluentWebUITesting.Accessors;
 using FluentWebUITesting.Extensions;
 
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 
 namespace FluentWebUITesting.Controls
 {
@@ -146,6 +147,13 @@ namespace FluentWebUITesting.Controls
 			}
 
 			return new TextBoxWrapper(elem, HowFound, Browser);
+		}
+
+		public void MoveMouseToIt()
+		{
+			Browser.ScrollElementIntoView(Element);
+			var action = new Actions(Browser);
+			action.MoveToElement(Element).Perform();
 		}
 
 		public IReadOnlyBooleanState Visible()

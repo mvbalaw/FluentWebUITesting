@@ -4,5 +4,6 @@ namespace FluentWebUITesting.Controls
 	{
 		WaitWrapper Click();
 		void ClickNoWait();
+		void MoveMouseToIt();
 	}
 }
