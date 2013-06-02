@@ -1,4 +1,0 @@
-NUnit-2.5.10.11092
-http://www.nunit.org/index.php?p=home
-Downloaded from the nunit site on 6/13/2010:
-http://launchpad.net/nunitv2/2.5/2.5.10/+download/NUnit-2.5.10.11092-src.zip

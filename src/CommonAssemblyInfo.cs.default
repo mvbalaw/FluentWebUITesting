@@ -1,0 +1,8 @@
+using System.Reflection;
+using System.Runtime.InteropServices;
+[assembly: AssemblyCompany("MVBA, P.C.")]
+[assembly: AssemblyProduct("FluentWebUITesting")]
+[assembly: AssemblyCopyright("MVBA, P.C. (c) 2009-2013")]
+[assembly: AssemblyTrademark("2.0.0.0")]
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyFileVersion("2.0.0.0")]

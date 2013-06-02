@@ -1,6 +1,10 @@
-This is a fluent wrapper around WatiN for web interface tests.
+FluentWebUITesting ReadMe
+===
+### Description
 
-## Examples
+FluentWebUITesting is a fluent wrapper around WebDriver for web interface tests.
+
+### Examples
 
 	[Test]
 	public void Should_display_the_date_the_installation_expires()
@@ -27,13 +31,23 @@ This is a fluent wrapper around WatiN for web interface tests.
 		RunTest(PartialUrl, ListTitle, steps);
 	}
 
+### How To Build:
+
+The build script requires Ruby with rake installed.
+
+1. Run `InstallGems.bat` to get the ruby dependencies (only needs to be run once per computer)
+1. open a command prompt to the root folder and type `rake` to execute rakefile.rb
+
+If you do not have ruby:
+
+1. You need to create a src\CommonAssemblyInfo.cs file. Go.bat will copy src\CommonAssemblyInfo.cs.default to src\CommonAssemblyInfo.cs
+1. open src\FluentWebUITesting.sln with Visual Studio and build the solution
 	
-## License		
+### License		
 
 [MIT License][mitlicense]
 
-This project is part of [MVBA Law Commons][mvbalawcommons].
+This project is part of [MVBA's Open Source Projects][MvbaLawGithub].
 
-[mvbalawcommons]: http://code.google.com/p/mvbalaw-commons/
+[MvbaLawGithub]: http://mvbalaw.github.io/
 [mitlicense]: http://www.opensource.org/licenses/mit-license.php
-
