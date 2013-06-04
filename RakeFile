@@ -96,7 +96,6 @@ zip :archive do |zip|
   puts "Artifacts are available in the artifact folder: #{settings[:artifacts]}"
 end
 
-
 def copy_output_files(fromDir, filePattern, outDir)
   Dir.glob(File.join(fromDir, filePattern)){|file| 		
 	copy(file, outDir) if File.file?(file)
