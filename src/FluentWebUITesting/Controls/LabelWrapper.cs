@@ -1,8 +1,5 @@
 using System;
 
-using FluentAssert;
-using FluentAssert.Exceptions;
-
 using FluentWebUITesting.Accessors;
 
 using OpenQA.Selenium;

@@ -1,7 +1,7 @@
 require 'albacore'
 
 PRODUCT_NAME = "FluentWebUITesting"
-CLR_TOOLS_VERSION = "v4.0.30319"
+CLR_TOOLS_VERSION = "v4.0"
 DEFAULT_BUILD_NUMBER = "0.1.0"
 COMPANY_NAME = "MVBA, P.C."
 COPYRIGHT = "MVBA, P.C. (c) 2009-2013"
@@ -60,9 +60,22 @@ assemblyinfo :assemblyinfo do |asm|
   asm.output_file = "src/CommonAssemblyInfo.cs"
 end
 
+desc "Add Resharper escapes to CommonAssemblyInfo.cs file"
+task :resharperAssemblyInfo do
+  puts
+  puts "adding Resharper escapes to src/CommonAssemblyInfo.cs"
+  puts
+  File.open('src/CommonAssemblyInfo.cs', 'r+') do |f|
+    contents = f.read
+    f.rewind
+    f.puts "// ReSharper disable RedundantUsingDirective"
+    f.puts contents
+    f.puts "// ReSharper enable RedundantUsingDirective"
+  end
+end
+
 desc "Builds the #{PRODUCT_NAME} solution"
-msbuild :build => [:clean, :assemblyinfo] do |msb|
-  puts "Compiling #{PRODUCT_NAME} in #{settings[:compile_target]} mode..."
+msbuild :build => [:clean, :assemblyinfo, :resharperAssemblyInfo] do |msb|  puts "Compiling #{PRODUCT_NAME} in #{settings[:compile_target]} mode..."
   msb.properties :configuration => settings[:compile_target]
   msb.targets :Clean, :Build
   msb.solution = "src/#{PRODUCT_NAME}.sln"
