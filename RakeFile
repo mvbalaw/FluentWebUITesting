@@ -18,7 +18,7 @@ end
 
 $MSBUILD = $MSBUILD + "msbuild.exe"
 PRODUCT_NAME = "FluentWebUITesting"
-DEFAULT_BUILD_NUMBER = "2.0.0"
+DEFAULT_BUILD_NUMBER = "2.1.0"
 COMPANY_NAME = "MVBA, P.C."
 COPYRIGHT = "MVBA, P.C. (c) 2011-2020"
 ARTIFACTS = File.expand_path("dist")
